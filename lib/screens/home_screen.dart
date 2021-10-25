@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../widgets/custom_app_bar.dart';
 import 'history_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -10,13 +11,13 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
+      appBar: CustomAppBar(
         actions: [
           IconButton(
             onPressed: () => Navigator.of(context).pushNamed(
               HistoryScreen.routeName,
+              // Necessary for PageTransition
+              // https://pub.dev/packages/page_transition#usage-for-predefined-routes
               arguments: 'arguments data',
             ),
             icon: Icon(
@@ -49,7 +50,7 @@ class HomeScreen extends StatelessWidget {
                   TextSpan(
                     text: '0x0.st terms',
                     style: const TextStyle(
-                      color: Color(0xFF70C3FF),
+                      color: Colors.lightBlue,
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () => launch('https://0x0.st/'),
