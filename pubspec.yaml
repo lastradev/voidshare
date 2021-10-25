@@ -1,0 +1,31 @@
+name: void_share
+description: A simple file uploader
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+dependencies:
+  cupertino_icons: ^1.0.2
+  flutter:
+    sdk: flutter
+  page_transition: ^2.0.4
+  url_launcher: ^6.0.12
+
+dev_dependencies:
+  flutter_lints: ^1.0.4
+  flutter_test:
+    sdk: flutter
+  lint: ^1.7.2
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/writer_illustration.png
+    - assets/images/flat_characters_illustration.png
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
