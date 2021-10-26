@@ -12,7 +12,6 @@ class HistoryScreen extends StatelessWidget {
           onPressed: Navigator.of(context).pop,
           icon: const Icon(
             Icons.arrow_back,
-            size: 32,
           ),
         ),
       ),

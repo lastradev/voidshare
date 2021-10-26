@@ -12,6 +12,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text('VoidShare'),
         actions: [
           IconButton(
             onPressed: () => Navigator.of(context).pushNamed(
@@ -22,7 +23,6 @@ class HomeScreen extends StatelessWidget {
             ),
             icon: const Icon(
               Icons.history,
-              size: 32,
             ),
           ),
         ],
@@ -32,10 +32,10 @@ class HomeScreen extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           child: Column(
             children: [
-              Image(
-                image:
-                    const AssetImage('assets/images/writer_illustration.png'),
-                height: MediaQuery.of(context).size.height / 2.5,
+              const SizedBox(height: 30),
+              const Image(
+                image: AssetImage('assets/images/writer_illustration.png'),
+                width: 200,
               ),
               const SizedBox(height: 30),
               Text(

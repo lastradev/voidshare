@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 final appTheme = ThemeData(
   appBarTheme: const AppBarTheme(
     foregroundColor: Colors.blue,
-    backgroundColor: Colors.transparent,
-    shadowColor: Colors.transparent,
+    backgroundColor: Color(0xFFFAFAFA),
+    elevation: 1,
     systemOverlayStyle: SystemUiOverlayStyle(
       statusBarColor: Color(0xFFFAFAFA),
       statusBarIconBrightness: Brightness.dark,
