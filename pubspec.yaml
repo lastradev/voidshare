@@ -22,8 +22,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/writer_illustration.png
-    - assets/images/flat_characters_illustration.png
+    - assets/images/
   fonts:
     - family: Poppins
       fonts:
