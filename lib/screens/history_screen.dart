@@ -26,10 +26,11 @@ class HistoryScreen extends StatelessWidget {
                 const Text('Nothing here yet'),
               ],
             ),
-            const Image(
-              image:
-                  AssetImage('assets/images/flat_characters_illustration.png'),
-              width: 200,
+            Image(
+              image: const AssetImage(
+                'assets/images/flat_characters_illustration.png',
+              ),
+              height: MediaQuery.of(context).size.height / 2.5,
             ),
           ],
         ),
