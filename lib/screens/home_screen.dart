@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../widgets/custom_app_bar.dart';
 import 'history_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -11,7 +10,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: AppBar(
         actions: [
           IconButton(
             onPressed: () => Navigator.of(context).pushNamed(
@@ -20,10 +19,9 @@ class HomeScreen extends StatelessWidget {
               // https://pub.dev/packages/page_transition#usage-for-predefined-routes
               arguments: 'arguments data',
             ),
-            icon: Icon(
+            icon: const Icon(
               Icons.history,
-              color: Theme.of(context).primaryColor,
-              size: 30,
+              size: 32,
             ),
           ),
         ],
