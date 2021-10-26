@@ -7,6 +7,7 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 dependencies:
   cupertino_icons: ^1.0.2
+  dotted_border: ^2.0.0+1
   flutter:
     sdk: flutter
   page_transition: ^2.0.4

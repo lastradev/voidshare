@@ -8,9 +8,12 @@ class HistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        foregroundColor: Colors.lightBlue,
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
+        leading: IconButton(
+          onPressed: Navigator.of(context).pop,
+          icon: const Icon(
+            Icons.arrow_back,
+          ),
+        ),
       ),
       body: Center(
         child: Column(
@@ -22,10 +25,11 @@ class HistoryScreen extends StatelessWidget {
                 const Text('Nothing here yet'),
               ],
             ),
-            const Image(
-              image:
-                  AssetImage('assets/images/flat_characters_illustration.png'),
-              width: 200,
+            Image(
+              image: const AssetImage(
+                'assets/images/flat_characters_illustration.png',
+              ),
+              height: MediaQuery.of(context).size.height / 2.5,
             ),
           ],
         ),

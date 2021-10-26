@@ -9,7 +9,8 @@ import 'screens/home_screen.dart';
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Colors.black,
+      systemNavigationBarColor: Color(0xFFFAFAFA),
+      systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
   runApp(const MyApp());
