@@ -12,13 +12,13 @@ final appTheme = ThemeData(
     ),
   ),
   fontFamily: 'Poppins',
-  textTheme: const TextTheme(
+  textTheme: TextTheme(
     headline5: TextStyle(
       wordSpacing: 4,
-      color: Color(0xFF3E3838),
+      color: Colors.grey.shade800,
     ),
     bodyText2: TextStyle(
-      color: Color(0xFF828282),
+      color: Colors.grey.shade600,
     ),
   ),
 );

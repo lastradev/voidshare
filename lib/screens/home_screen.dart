@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/select_files_container.dart';
+import '../widgets/selected_file_card.dart';
 import 'history_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -33,8 +34,8 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 30),
-              const Image(
-                image: AssetImage('assets/images/writer_illustration.png'),
+              Image.asset(
+                'assets/images/writer_illustration.png',
                 width: 200,
               ),
               const SizedBox(height: 30),
@@ -62,6 +63,27 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               const SelectFilesContainer(),
+              const SizedBox(height: 30),
+              SizedBox(
+                child: Container(
+                  margin: const EdgeInsets.only(left: 20, right: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.all(8),
+                        child: const Text('Selected files'),
+                      ),
+                      TextButton(
+                        child: const Text('Clear'),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SelectedFileCard(),
+              const SizedBox(height: 30),
             ],
           ),
         ),

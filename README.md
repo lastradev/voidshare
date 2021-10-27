@@ -1,7 +1,7 @@
-<img src="https://i.imgur.com/2rzMsGJ.png" alt="app icon" height="150">  
+<img src="https://i.imgur.com/ZjqWw5w.png" alt="app icon" height="150">  
 
 # VoidShare
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![GitHub Hacktoberfest combined status](https://img.shields.io/github/hacktoberfest/2021/lastra-dev/void-share)
 
