@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 
-class FileSelector {
+class FileManager {
   List<File>? files;
   List<PlatformFile>? filesData;
 
+  final _filePicker = FilePicker.platform;
+
   Future<void> selectFiles() async {
-    final result = await FilePicker.platform.pickFiles(
+    final result = await _filePicker.pickFiles(
       allowMultiple: true,
     );
 
@@ -20,5 +22,6 @@ class FileSelector {
   void removeFiles() {
     files = null;
     filesData = null;
+    _filePicker.clearTemporaryFiles();
   }
 }

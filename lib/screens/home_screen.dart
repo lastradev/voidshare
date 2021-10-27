@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../data/file_selector.dart';
+import '../data/file_manager.dart';
 import '../widgets/select_files_container.dart';
 import '../widgets/selected_file_card.dart';
 import 'history_screen.dart';
@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  FileSelector fileSelector = FileSelector();
+  FileManager fileManager = FileManager();
 
   @override
   Widget build(BuildContext context) {
@@ -73,12 +73,12 @@ class _HomeScreenState extends State<HomeScreen> {
               GestureDetector(
                 child: const SelectFilesContainer(),
                 onTap: () async {
-                  await fileSelector.selectFiles();
+                  await fileManager.selectFiles();
                   setState(() {});
                 },
               ),
               Visibility(
-                visible: fileSelector.files != null,
+                visible: fileManager.files != null,
                 child: Container(
                   margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
                   child: Row(
@@ -91,15 +91,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       TextButton(
                         child: const Text('Clear'),
                         onPressed: () {
-                          setState(() => fileSelector.removeFiles());
+                          setState(() => fileManager.removeFiles());
                         },
                       ),
                     ],
                   ),
                 ),
               ),
-              if (fileSelector.filesData != null)
-                ...fileSelector.filesData!.map((fileData) {
+              if (fileManager.filesData != null)
+                ...fileManager.filesData!.map((fileData) {
                   return SelectedFileCard(fileData: fileData);
                 }),
               const SizedBox(height: 30),
