@@ -2,12 +2,20 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../data/file_selector.dart';
 import '../widgets/select_files_container.dart';
 import '../widgets/selected_file_card.dart';
 import 'history_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  FileSelector fileSelector = FileSelector();
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +70,17 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
-              const SelectFilesContainer(),
-              const SizedBox(height: 30),
-              SizedBox(
+              GestureDetector(
+                child: const SelectFilesContainer(),
+                onTap: () async {
+                  await fileSelector.selectFiles();
+                  setState(() {});
+                },
+              ),
+              Visibility(
+                visible: fileSelector.files != null,
                 child: Container(
-                  margin: const EdgeInsets.only(left: 20, right: 20),
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -76,13 +90,18 @@ class HomeScreen extends StatelessWidget {
                       ),
                       TextButton(
                         child: const Text('Clear'),
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() => fileSelector.removeFiles());
+                        },
                       ),
                     ],
                   ),
                 ),
               ),
-              const SelectedFileCard(),
+              if (fileSelector.filesData != null)
+                ...fileSelector.filesData!.map((fileData) {
+                  return SelectedFileCard(fileData: fileData);
+                }),
               const SizedBox(height: 30),
             ],
           ),

@@ -1,9 +1,12 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_snack_bar.dart';
 
 class SelectedFileCard extends StatefulWidget {
-  const SelectedFileCard({Key? key}) : super(key: key);
+  const SelectedFileCard({required this.fileData, Key? key}) : super(key: key);
+
+  final PlatformFile fileData;
 
   @override
   State<SelectedFileCard> createState() => _SelectedFileCardState();
@@ -17,7 +20,7 @@ class _SelectedFileCardState extends State<SelectedFileCard> {
     return dismissed
         ? Container()
         : Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
+            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
             child: Dismissible(
               key: ValueKey(widget.key),
               direction: DismissDirection.endToStart,
@@ -66,12 +69,12 @@ class _SelectedFileCardState extends State<SelectedFileCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'hot_air_balloon.jpg',
+                            widget.fileData.name,
                             style: TextStyle(
                               color: Colors.grey.shade800,
                             ),
                           ),
-                          const Text('219.4 KB'),
+                          Text('${(widget.fileData.size / 1024).round()} KB'),
                         ],
                       )
                     ],
