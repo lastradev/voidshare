@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../helpers/formatters.dart';
 import 'custom_snack_bar.dart';
 
 class SelectedFileCard extends StatefulWidget {
@@ -74,7 +75,7 @@ class _SelectedFileCardState extends State<SelectedFileCard> {
                               color: Colors.grey.shade800,
                             ),
                           ),
-                          Text('${(widget.fileData.size / 1024).round()} KB'),
+                          Text(Formatters.formatBytes(widget.fileData.size, 1)),
                         ],
                       )
                     ],
