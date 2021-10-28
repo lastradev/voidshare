@@ -99,9 +99,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               if (fileManager.filesData != null)
-                ...fileManager.filesData!.map((fileData) {
-                  return SelectedFileCard(fileData: fileData);
-                }),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: fileManager.filesData!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return SelectedFileCard(
+                      fileData: fileManager.filesData![index],
+                    );
+                  },
+                ),
               const SizedBox(height: 30),
             ],
           ),
