@@ -1,24 +1,20 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../helpers/file_manager.dart';
+import '../providers/file_manager.dart';
 import '../widgets/select_files_container.dart';
 import '../widgets/selected_file_card.dart';
 import 'history_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  FileManager fileManager = FileManager();
-
-  @override
   Widget build(BuildContext context) {
+    final fileManager = Provider.of<FileManager>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('VoidShare'),
@@ -74,11 +70,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: const SelectFilesContainer(),
                 onTap: () async {
                   await fileManager.selectFiles();
-                  setState(() {});
+                  //setState(() {});
                 },
               ),
               Visibility(
-                visible: fileManager.files != null,
+                visible: fileManager.filesData.isNotEmpty,
                 child: Container(
                   margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
                   child: Row(
@@ -91,24 +87,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       TextButton(
                         child: const Text('Clear'),
                         onPressed: () {
-                          setState(() => fileManager.removeFiles());
+                          fileManager.removeFiles();
                         },
                       ),
                     ],
                   ),
                 ),
               ),
-              if (fileManager.filesData != null)
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  itemCount: fileManager.filesData!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return SelectedFileCard(
-                      fileData: fileManager.filesData![index],
-                    );
-                  },
-                ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                itemCount: fileManager.filesData.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return SelectedFileCard(
+                    fileData: fileManager.filesData[index],
+                  );
+                },
+              ),
               const SizedBox(height: 30),
             ],
           ),

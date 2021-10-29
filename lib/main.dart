@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
 import 'app_theme.dart';
+import 'providers/file_manager.dart';
 import 'screens/history_screen.dart';
 import 'screens/home_screen.dart';
 
@@ -21,21 +23,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: appTheme,
-      title: 'VoidShare',
-      home: const HomeScreen(),
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case HistoryScreen.routeName:
-            return PageTransition(
-              child: const HistoryScreen(),
-              type: PageTransitionType.fade,
-              settings: settings,
-            );
-        }
-      },
+    return ChangeNotifierProvider(
+      create: (context) => FileManager(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: appTheme,
+        title: 'VoidShare',
+        home: const HomeScreen(),
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case HistoryScreen.routeName:
+              return PageTransition(
+                child: const HistoryScreen(),
+                type: PageTransitionType.fade,
+                settings: settings,
+              );
+          }
+        },
+      ),
     );
   }
 }

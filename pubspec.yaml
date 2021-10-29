@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   page_transition: ^2.0.4
+  provider: ^6.0.1
   url_launcher: ^6.0.12
 
 dev_dependencies:
