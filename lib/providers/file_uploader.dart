@@ -1,12 +1,54 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 class FileUploader {
-  static void uploadFile(PlatformFile file) async {
+  static void uploadFiles(List<PlatformFile> platformFiles) async {
+    if (platformFiles.length > 1) {
+      final zipFile = await _compressFiles(platformFiles);
+      _uploadFile(zipFile);
+    } else {
+      _uploadFile(platformFiles.first);
+    }
+  }
+
+  static Future<PlatformFile> _compressFiles(
+    List<PlatformFile> platformFiles,
+  ) async {
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+    final encoder = ZipFileEncoder();
+
+    encoder.create('$tempPath/out.zip');
+
+    for (var file in platformFiles) {
+      encoder.addFile(File(file.path!));
+    }
+
+    final zipPath = encoder.zip_path;
+    encoder.close();
+
+    final zipPlatformFile = _toPlatformFile(File(zipPath));
+    return zipPlatformFile;
+  }
+
+  static Future<PlatformFile> _toPlatformFile(File file) async {
+    return PlatformFile(
+      path: file.path,
+      name: p.basename(file.path),
+      size: await file.length(),
+      readStream: file.openRead(),
+    );
+  }
+
+  static void _uploadFile(PlatformFile file) async {
     final uri = Uri.https('0x0.st', '/');
     final stream = http.ByteStream(file.readStream!);
     final request = http.MultipartRequest('POST', uri);
@@ -29,6 +71,7 @@ class FileUploader {
       throw Exception('HTTP ${response.statusCode}');
     }
 
-    print(await response.stream.transform(const Utf8Decoder()).join());
+    final body = await response.stream.transform(const Utf8Decoder()).join();
+    print(body);
   }
 }

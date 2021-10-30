@@ -22,7 +22,8 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: Visibility(
         visible: fileManager.filesData.isNotEmpty,
         child: FloatingActionButton(
-          onPressed: () => FileUploader.uploadFile(fileManager.filesData.first),
+          onPressed: () async =>
+              FileUploader.uploadFiles(fileManager.filesData),
           child: const Icon(Icons.file_upload_rounded),
         ),
       ),
