@@ -11,9 +11,11 @@ class FileManager with ChangeNotifier {
     final result = await _filePicker.pickFiles(
       allowMultiple: true,
       withReadStream: true,
-      onFileLoading: (_) {
-        isLoadingFiles = true;
-        notifyListeners();
+      onFileLoading: (status) {
+        if (status == FilePickerStatus.picking) {
+          isLoadingFiles = true;
+          notifyListeners();
+        }
       },
     );
 
