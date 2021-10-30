@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../helpers/formatters.dart';
 import '../providers/file_manager.dart';
+import '../providers/file_uploader.dart';
 import '../widgets/file_loading_indicator.dart';
 import '../widgets/select_files_container.dart';
 import '../widgets/selected_file_card.dart';
@@ -18,6 +19,13 @@ class HomeScreen extends StatelessWidget {
     final fileManager = Provider.of<FileManager>(context);
 
     return Scaffold(
+      floatingActionButton: Visibility(
+        visible: fileManager.filesData.isNotEmpty,
+        child: FloatingActionButton(
+          onPressed: () => FileUploader.uploadFile(fileManager.filesData.first),
+          child: const Icon(Icons.file_upload_rounded),
+        ),
+      ),
       appBar: AppBar(
         title: const Text('VoidShare'),
         actions: [
@@ -104,7 +112,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   if (fileManager.isLoadingFiles) const FileLoadingIndicator(),
-                  const SizedBox(height: 30),
                 ],
               ),
             ),
