@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../helpers/formatters.dart';
 import '../providers/file_manager.dart';
+import '../widgets/file_loading_indicator.dart';
 import '../widgets/select_files_container.dart';
 import '../widgets/selected_file_card.dart';
 import 'history_screen.dart';
@@ -82,7 +84,9 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       Container(
                         margin: const EdgeInsets.all(8),
-                        child: const Text('Selected files'),
+                        child: Text(
+                          'Selected files - ${Formatters.formatBytes(fileManager.totalSize, 2)}',
+                        ),
                       ),
                       TextButton(
                         child: const Text('Clear'),
@@ -99,11 +103,13 @@ class HomeScreen extends StatelessWidget {
                 physics: const ClampingScrollPhysics(),
                 itemCount: fileManager.filesData.length,
                 itemBuilder: (BuildContext context, int index) {
+                  print("Built card $index");
                   return SelectedFileCard(
                     fileData: fileManager.filesData[index],
                   );
                 },
               ),
+              if (fileManager.isLoadingFiles) const FileLoadingIndicator(),
               const SizedBox(height: 30),
             ],
           ),

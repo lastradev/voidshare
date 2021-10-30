@@ -64,17 +64,20 @@ class SelectedFileCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 5),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      fileData.name,
-                      style: TextStyle(
-                        color: Colors.grey.shade800,
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        fileData.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.grey.shade800,
+                        ),
                       ),
-                    ),
-                    Text(Formatters.formatBytes(fileData.size, 1)),
-                  ],
+                      Text(Formatters.formatBytes(fileData.size, 1)),
+                    ],
+                  ),
                 )
               ],
             ),

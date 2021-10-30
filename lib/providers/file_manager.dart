@@ -5,16 +5,23 @@ class FileManager with ChangeNotifier {
   List<PlatformFile> filesData = [];
 
   final _filePicker = FilePicker.platform;
+  bool isLoadingFiles = false;
 
   Future<void> selectFiles() async {
     final result = await _filePicker.pickFiles(
       allowMultiple: true,
+      withReadStream: true,
+      onFileLoading: (_) {
+        isLoadingFiles = true;
+        notifyListeners();
+      },
     );
 
+    isLoadingFiles = false;
     if (result != null) {
       filesData = result.files;
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   void removeFiles() {
@@ -26,8 +33,8 @@ class FileManager with ChangeNotifier {
   int removeFile(PlatformFile fileData) {
     final index = filesData.indexOf(fileData);
     filesData.remove(fileData);
+    notifyListeners();
     if (filesData.isEmpty) {
-      notifyListeners();
       _filePicker.clearTemporaryFiles();
     }
     return index;
@@ -36,5 +43,13 @@ class FileManager with ChangeNotifier {
   void addFile(int index, PlatformFile fileData) {
     filesData.insert(index, fileData);
     notifyListeners();
+  }
+
+  int get totalSize {
+    var size = 0;
+    for (var fileData in filesData) {
+      size += fileData.size;
+    }
+    return size;
   }
 }
