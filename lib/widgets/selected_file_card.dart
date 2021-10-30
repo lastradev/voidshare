@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -55,12 +57,23 @@ class SelectedFileCard extends StatelessWidget {
                   margin: const EdgeInsets.all(8),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      'assets/images/0066.jpg',
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
-                    ),
+                    child: fileManager.isImage(fileData)
+                        ? Image.file(
+                            File(fileData.path!),
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          )
+                        : Container(
+                            color: Colors.lightBlue.shade50,
+                            height: 50,
+                            width: 50,
+                            child: Icon(
+                              Icons.file_copy_rounded,
+                              size: 30,
+                              color: Colors.lightBlue.shade300,
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(width: 5),

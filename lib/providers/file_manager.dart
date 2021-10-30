@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mime/mime.dart';
 
 class FileManager with ChangeNotifier {
   List<PlatformFile> filesData = [];
@@ -53,5 +54,10 @@ class FileManager with ChangeNotifier {
       size += fileData.size;
     }
     return size;
+  }
+
+  bool isImage(PlatformFile fileData) {
+    final mimeType = lookupMimeType(fileData.path!);
+    return mimeType!.startsWith('image/');
   }
 }
