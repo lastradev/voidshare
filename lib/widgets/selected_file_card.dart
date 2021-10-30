@@ -58,11 +58,16 @@ class SelectedFileCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: fileManager.isImage(fileData)
-                        ? Image.file(
-                            File(fileData.path!),
+                        ? FadeInImage(
+                            fit: BoxFit.cover,
                             width: 50,
                             height: 50,
-                            fit: BoxFit.cover,
+                            image: FileImage(
+                              File(fileData.path!),
+                            ),
+                            placeholder: const AssetImage(
+                              'assets/images/file-icon.png',
+                            ),
                           )
                         : Container(
                             color: Colors.lightBlue.shade50,
