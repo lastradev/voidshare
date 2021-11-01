@@ -62,7 +62,7 @@ class HomeScreen extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   Image.asset(
                     'assets/images/writer.png',
                     width: 200,
