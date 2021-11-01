@@ -32,6 +32,7 @@ class HomeScreen extends StatelessWidget {
             isUploading = true;
             final url = await FileUploader.uploadFiles(fileManager.filesData);
             isUploading = false;
+
             Navigator.of(context).pushNamed(
               UploadedScreen.routeName,
               arguments: url.trim(),
