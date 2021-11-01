@@ -7,6 +7,7 @@ import 'app_theme.dart';
 import 'providers/file_manager.dart';
 import 'screens/history_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/uploaded_screen.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
@@ -35,6 +36,12 @@ class MyApp extends StatelessWidget {
             case HistoryScreen.routeName:
               return PageTransition(
                 child: const HistoryScreen(),
+                type: PageTransitionType.fade,
+                settings: settings,
+              );
+            case UploadedScreen.routeName:
+              return PageTransition(
+                child: const UploadedScreen(),
                 type: PageTransitionType.fade,
                 settings: settings,
               );

@@ -1,14 +1,15 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import '../helpers/formatters.dart';
 import '../providers/file_manager.dart';
+import '../providers/file_uploader.dart';
+import '../widgets/file_clearer.dart';
 import '../widgets/file_loading_indicator.dart';
 import '../widgets/select_files_container.dart';
 import '../widgets/selected_file_card.dart';
+import '../widgets/terms_subtitle.dart';
 import 'history_screen.dart';
+import 'uploaded_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -16,18 +17,34 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fileManager = Provider.of<FileManager>(context);
+    bool isUploading = false;
 
     return Scaffold(
+      floatingActionButton: Visibility(
+        visible: fileManager.filesData.isNotEmpty,
+        child: FloatingActionButton(
+          onPressed: () async {
+            if (isUploading) {
+              return;
+            }
+
+            isUploading = true;
+            final url = await FileUploader.uploadFiles(fileManager.filesData);
+            isUploading = false;
+            Navigator.of(context).pushNamed(
+              UploadedScreen.routeName,
+              arguments: url.trim(),
+            );
+          },
+          child: const Icon(Icons.file_upload_rounded),
+        ),
+      ),
       appBar: AppBar(
         title: const Text('VoidShare'),
         actions: [
           IconButton(
-            onPressed: () => Navigator.of(context).pushNamed(
-              HistoryScreen.routeName,
-              // Necessary for PageTransition
-              // https://pub.dev/packages/page_transition#usage-for-predefined-routes
-              arguments: 'arguments data',
-            ),
+            onPressed: () =>
+                Navigator.of(context).pushNamed(HistoryScreen.routeName),
             icon: const Icon(
               Icons.history,
             ),
@@ -46,7 +63,7 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 30),
                   Image.asset(
-                    'assets/images/writer_illustration.png',
+                    'assets/images/writer.png',
                     width: 200,
                   ),
                   const SizedBox(height: 30),
@@ -54,57 +71,11 @@ class HomeScreen extends StatelessWidget {
                     'Upload files',
                     style: Theme.of(context).textTheme.headline5,
                   ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Files must adhere to ',
-                          style: Theme.of(context).textTheme.bodyText2,
-                        ),
-                        TextSpan(
-                          text: '0x0.st terms',
-                          style: const TextStyle(
-                            color: Colors.lightBlue,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => launch('https://0x0.st/'),
-                        ),
-                      ],
-                    ),
-                  ),
+                  const TermsSubtitle(),
                   const SizedBox(height: 30),
-                  GestureDetector(
-                    child: const SelectFilesContainer(),
-                    onTap: () async {
-                      await fileManager.selectFiles();
-                    },
-                  ),
-                  Visibility(
-                    visible: fileManager.filesData.isNotEmpty,
-                    child: Container(
-                      margin:
-                          const EdgeInsets.only(left: 20, right: 20, top: 30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.all(8),
-                            child: Text(
-                              'Selected files - ${Formatters.formatBytes(fileManager.totalSize, 2)}',
-                            ),
-                          ),
-                          TextButton(
-                            child: const Text('Clear'),
-                            onPressed: () {
-                              fileManager.removeFiles();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  const SelectFilesContainer(),
+                  const FileClearer(),
                   if (fileManager.isLoadingFiles) const FileLoadingIndicator(),
-                  const SizedBox(height: 30),
                 ],
               ),
             ),
