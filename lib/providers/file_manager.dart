@@ -29,7 +29,9 @@ class FileManager with ChangeNotifier {
 
   void removeFiles() {
     filesData = [];
-    _filePicker.clearTemporaryFiles();
+    if (!isLoadingFiles) {
+      _filePicker.clearTemporaryFiles();
+    }
     notifyListeners();
   }
 
@@ -37,7 +39,7 @@ class FileManager with ChangeNotifier {
     final index = filesData.indexOf(fileData);
     filesData.remove(fileData);
     notifyListeners();
-    if (filesData.isEmpty) {
+    if (filesData.isEmpty && !isLoadingFiles) {
       _filePicker.clearTemporaryFiles();
     }
     return index;

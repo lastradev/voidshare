@@ -9,6 +9,7 @@ class FileClearer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fileManager = Provider.of<FileManager>(context);
+
     return Visibility(
       visible: fileManager.filesData.isNotEmpty,
       child: Container(
@@ -24,9 +25,7 @@ class FileClearer extends StatelessWidget {
             ),
             TextButton(
               child: const Text('Clear'),
-              onPressed: () {
-                fileManager.removeFiles();
-              },
+              onPressed: () => fileManager.removeFiles(),
             ),
           ],
         ),

@@ -21,7 +21,8 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       floatingActionButton: Visibility(
-        visible: fileManager.filesData.isNotEmpty,
+        visible:
+            fileManager.filesData.isNotEmpty && !fileManager.isLoadingFiles,
         child: FloatingActionButton(
           onPressed: () async {
             if (isUploading) {

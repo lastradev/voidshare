@@ -21,6 +21,7 @@ class FileLoadingIndicator extends StatelessWidget {
           'Loading files',
           style: TextStyle(color: Colors.grey.shade800),
         ),
+        const SizedBox(height: 30),
       ],
     );
   }
