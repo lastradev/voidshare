@@ -17,13 +17,20 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fileManager = Provider.of<FileManager>(context);
+    bool isUploading = false;
 
     return Scaffold(
       floatingActionButton: Visibility(
         visible: fileManager.filesData.isNotEmpty,
         child: FloatingActionButton(
           onPressed: () async {
+            if (isUploading) {
+              return;
+            }
+
+            isUploading = true;
             final url = await FileUploader.uploadFiles(fileManager.filesData);
+            isUploading = false;
             Navigator.of(context).pushNamed(
               UploadedScreen.routeName,
               arguments: url.trim(),
