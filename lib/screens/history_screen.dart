@@ -7,14 +7,7 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: Navigator.of(context).pop,
-          icon: const Icon(
-            Icons.arrow_back,
-          ),
-        ),
-      ),
+      appBar: AppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -26,7 +19,7 @@ class HistoryScreen extends StatelessWidget {
               ],
             ),
             Image.asset(
-              'assets/images/flat_characters_illustration.png',
+              'assets/images/flat_characters.png',
               height: MediaQuery.of(context).size.height / 2.5,
             ),
           ],

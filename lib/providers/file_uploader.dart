@@ -10,13 +10,14 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 class FileUploader {
-  static void uploadFiles(List<PlatformFile> platformFiles) async {
+  static Future<String> uploadFiles(List<PlatformFile> platformFiles) async {
     if (platformFiles.length > 1) {
       final zipFile = await _compressFiles(platformFiles);
-      _uploadFile(zipFile);
-    } else {
-      _uploadFile(platformFiles.first);
+      final url = await _uploadFile(zipFile);
+      return url;
     }
+    final url = await _uploadFile(platformFiles.first);
+    return url;
   }
 
   static Future<PlatformFile> _compressFiles(
@@ -48,7 +49,7 @@ class FileUploader {
     );
   }
 
-  static void _uploadFile(PlatformFile file) async {
+  static Future<String> _uploadFile(PlatformFile file) async {
     final uri = Uri.https('0x0.st', '/');
     final stream = http.ByteStream(file.readStream!);
     final request = http.MultipartRequest('POST', uri);
@@ -72,6 +73,6 @@ class FileUploader {
     }
 
     final body = await response.stream.transform(const Utf8Decoder()).join();
-    print(body);
+    return body;
   }
 }

@@ -22,7 +22,7 @@ class FileManager with ChangeNotifier {
 
     isLoadingFiles = false;
     if (result != null) {
-      filesData = result.files;
+      filesData.addAll(result.files);
     }
     notifyListeners();
   }
@@ -57,7 +57,17 @@ class FileManager with ChangeNotifier {
   }
 
   bool isImage(PlatformFile fileData) {
+    final imageMimeTypes = [
+      'image/png',
+      'image/jpeg',
+      'image/gif',
+      'image/x-icon',
+      'image/bmp',
+      'image/wbmp',
+      'image/vnd.wap.wbmp',
+      'image/webp',
+    ];
     final mimeType = lookupMimeType(fileData.path!);
-    return mimeType!.startsWith('image/');
+    return imageMimeTypes.contains(mimeType);
   }
 }
