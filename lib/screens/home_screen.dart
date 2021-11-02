@@ -10,6 +10,7 @@ import '../widgets/selected_file_card.dart';
 import '../widgets/terms_subtitle.dart';
 import 'history_screen.dart';
 import 'uploaded_screen.dart';
+import 'uploading_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -30,10 +31,14 @@ class HomeScreen extends StatelessWidget {
             }
 
             isUploading = true;
+            Navigator.of(context).pushNamed(
+              UploadingScreen.routeName,
+            );
+
             final url = await FileUploader.uploadFiles(fileManager.filesData);
             isUploading = false;
 
-            Navigator.of(context).pushNamed(
+            Navigator.of(context).pushReplacementNamed(
               UploadedScreen.routeName,
               arguments: url.trim(),
             );

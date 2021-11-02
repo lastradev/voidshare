@@ -41,7 +41,7 @@ class SelectedFileCard extends StatelessWidget {
         ),
       ),
       child: Container(
-        margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+        margin: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
         child: Card(
           elevation: 3,
           shadowColor: Colors.grey.shade50.withOpacity(0.4),

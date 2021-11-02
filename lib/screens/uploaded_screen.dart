@@ -32,14 +32,11 @@ class UploadedScreen extends StatelessWidget {
               children: [
                 Text(
                   'Upload done!',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline5!
-                      .copyWith(fontSize: 30),
+                  style: Theme.of(context).textTheme.headline5,
                 ),
                 Image.asset(
                   'assets/images/success.png',
-                  height: MediaQuery.of(context).size.height / 2.2,
+                  height: MediaQuery.of(context).size.height / 2.4,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
