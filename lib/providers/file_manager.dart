@@ -11,7 +11,6 @@ class FileManager with ChangeNotifier {
   Future<void> selectFiles() async {
     final result = await _filePicker.pickFiles(
       allowMultiple: true,
-      withReadStream: true,
       onFileLoading: (status) {
         if (status == FilePickerStatus.picking) {
           isLoadingFiles = true;

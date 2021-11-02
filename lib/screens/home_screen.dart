@@ -18,6 +18,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fileManager = Provider.of<FileManager>(context);
+    final fileUploader = Provider.of<FileUploader>(context);
     bool isUploading = false;
 
     return Scaffold(
@@ -35,7 +36,7 @@ class HomeScreen extends StatelessWidget {
               UploadingScreen.routeName,
             );
 
-            final url = await FileUploader.uploadFiles(fileManager.filesData);
+            final url = await fileUploader.uploadFiles(fileManager.filesData);
             isUploading = false;
 
             Navigator.of(context).pushReplacementNamed(

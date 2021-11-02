@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'app_theme.dart';
 import 'providers/file_manager.dart';
+import 'providers/file_uploader.dart';
 import 'screens/history_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/uploaded_screen.dart';
@@ -25,8 +26,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => FileManager(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => FileManager()),
+        ChangeNotifierProvider(create: (context) => FileUploader()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: appTheme,
