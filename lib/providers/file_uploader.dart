@@ -46,6 +46,9 @@ class FileUploader with ChangeNotifier {
 
     encoder.create('$tempPath/out.zip');
 
+    // Avoids choppy transition between home and uploading screens
+    await Future.delayed(const Duration(milliseconds: 300));
+
     for (var file in platformFiles) {
       await Future(() {
         encoder.addFile(File(file.path!));

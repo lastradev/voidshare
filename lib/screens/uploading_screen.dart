@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import '../providers/file_uploader.dart';
 
@@ -13,6 +12,12 @@ class UploadingScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Colors.red.shade400,
+        tooltip: 'Cancel',
+        child: const Icon(Icons.cancel_rounded),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -29,48 +34,31 @@ class UploadingScreen extends StatelessWidget {
             ),
             Column(
               children: [
-                Text(
-                  '${fileUploader.uploadPercentage}%',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline5!
-                      .copyWith(color: Colors.blue),
-                ),
-                const SizedBox(height: 5),
-                const SizedBox(
-                  width: 60,
-                  child: LoadingIndicator(
-                    indicatorType: Indicator.ballSpinFadeLoader,
-                    colors: [Colors.blue],
-                  ),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Text(
+                      '${fileUploader.uploadPercentage}%',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5!
+                          .copyWith(color: Colors.blue),
+                    ),
+                    SizedBox(
+                      height: 110,
+                      width: 110,
+                      child: CircularProgressIndicator(
+                        value: fileUploader.uploadPercentage / 100,
+                        backgroundColor: Colors.grey,
+                        strokeWidth: 9,
+                        color: Colors.lightBlue,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            Image.asset('assets/images/waiting.png', width: 250),
-            Container(
-              width: 250,
-              height: 40,
-              margin: const EdgeInsets.only(bottom: 10),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.red.shade400),
-                ),
-                child: Text(
-                  'Cancel',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6!
-                      .copyWith(color: Colors.white),
-                ),
-              ),
-            ),
+            Image.asset('assets/images/waiting.webp', width: 250),
           ],
         ),
       ),

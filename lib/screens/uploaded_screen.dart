@@ -24,6 +24,15 @@ class UploadedScreen extends StatelessWidget {
           },
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          fileManager.removeFiles();
+          Navigator.of(context).pop();
+        },
+        tooltip: 'Go Back',
+        child: const Icon(Icons.arrow_back_rounded),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -78,30 +87,6 @@ class UploadedScreen extends StatelessWidget {
               ],
             ),
             const SizedBox.shrink(),
-            SizedBox(
-              width: 250,
-              height: 40,
-              child: ElevatedButton(
-                onPressed: () {
-                  fileManager.removeFiles();
-                  Navigator.of(context).pop();
-                },
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                child: Text(
-                  'Go Back',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6!
-                      .copyWith(color: Colors.white),
-                ),
-              ),
-            ),
           ],
         ),
       ),

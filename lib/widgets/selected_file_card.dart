@@ -66,7 +66,7 @@ class SelectedFileCard extends StatelessWidget {
                               File(fileData.path!),
                             ),
                             placeholder: const AssetImage(
-                              'assets/images/file-icon.png',
+                              'assets/images/file-icon.webp',
                             ),
                           )
                         : Container(
