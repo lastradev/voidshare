@@ -47,7 +47,9 @@ class FileUploader with ChangeNotifier {
     encoder.create('$tempPath/out.zip');
 
     for (var file in platformFiles) {
-      encoder.addFile(File(file.path!));
+      await Future(() {
+        encoder.addFile(File(file.path!));
+      });
     }
 
     final zipPath = encoder.zip_path;

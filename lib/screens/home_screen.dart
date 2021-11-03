@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fileManager = Provider.of<FileManager>(context);
-    final fileUploader = Provider.of<FileUploader>(context);
+    final fileUploader = Provider.of<FileUploader>(context, listen: false);
     bool isUploading = false;
 
     return Scaffold(
