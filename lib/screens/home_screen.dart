@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/file_manager.dart';
 import '../providers/file_uploader.dart';
+import '../widgets/custom_alert_dialog.dart';
 import '../widgets/file_clearer.dart';
 import '../widgets/file_loading_indicator.dart';
 import '../widgets/select_files_container.dart';
@@ -36,13 +39,30 @@ class HomeScreen extends StatelessWidget {
               UploadingScreen.routeName,
             );
 
-            final url = await fileUploader.uploadFiles(fileManager.filesData);
-            isUploading = false;
+            try {
+              final url = await fileUploader.uploadFiles(fileManager.filesData);
+              Navigator.of(context).pushReplacementNamed(
+                UploadedScreen.routeName,
+                arguments: url.trim(),
+              );
+            } on HttpException catch (e) {
+              Navigator.of(context).pop();
+              CustomAlertDialog.showCustomAlertDialog(
+                context: context,
+                title: 'Upload Canceled',
+                message: e.message,
+              );
+            } on SocketException {
+              Navigator.of(context).pop();
+              CustomAlertDialog.showCustomAlertDialog(
+                context: context,
+                title: 'Connection Error',
+                message:
+                    'VoidShare encountered an error while trying to connect to the server, try again.',
+              );
+            }
 
-            Navigator.of(context).pushReplacementNamed(
-              UploadedScreen.routeName,
-              arguments: url.trim(),
-            );
+            isUploading = false;
           },
           child: const Icon(Icons.file_upload_rounded),
         ),

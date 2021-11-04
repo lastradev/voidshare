@@ -13,7 +13,7 @@ class UploadingScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: fileUploader.abortRequest,
         backgroundColor: Colors.red.shade400,
         tooltip: 'Cancel',
         child: const Icon(Icons.cancel_rounded),

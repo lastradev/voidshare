@@ -13,6 +13,7 @@ typedef OnUploadProgressCallback = void Function(int sentBytes, int totalBytes);
 
 class FileUploader with ChangeNotifier {
   int uploadPercentage = 0;
+  bool _requestAborted = false;
 
   Future<String> uploadFiles(List<PlatformFile> platformFiles) async {
     if (platformFiles.length > 1) {
@@ -50,9 +51,11 @@ class FileUploader with ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 300));
 
     for (var file in platformFiles) {
-      await Future(() {
-        encoder.addFile(File(file.path!));
-      });
+      if (!_requestAborted) {
+        await Future(() {
+          encoder.addFile(File(file.path!));
+        });
+      }
     }
 
     final zipPath = encoder.zip_path;
@@ -105,6 +108,11 @@ class FileUploader with ChangeNotifier {
     Stream<List<int>> streamUpload = msStream.transform(
       StreamTransformer.fromHandlers(
         handleData: (data, sink) {
+          if (_requestAborted) {
+            request.abort();
+            return;
+          }
+
           sink.add(data);
 
           byteCount += data.length;
@@ -116,6 +124,8 @@ class FileUploader with ChangeNotifier {
           throw error;
         },
         handleDone: (sink) {
+          uploadPercentage = 0;
+          _requestAborted = false;
           sink.close();
           // UPLOAD DONE;
         },
@@ -129,11 +139,17 @@ class FileUploader with ChangeNotifier {
     var statusCode = httpResponse.statusCode;
 
     if (statusCode ~/ 100 != 2) {
+      uploadPercentage = 0;
       throw Exception(
         'Error uploading file, Status code: ${httpResponse.statusCode}',
       );
     } else {
+      uploadPercentage = 0;
       return httpResponse.transform(const Utf8Decoder()).join();
     }
+  }
+
+  void abortRequest() {
+    _requestAborted = true;
   }
 }
