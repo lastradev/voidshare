@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
@@ -19,8 +20,6 @@ class FileUploader with ChangeNotifier {
   Future<String> uploadFiles(List<PlatformFile> platformFiles) async {
     uploadPercentage = 0;
     _uploadAborted = false;
-
-    await _waitForPageTransition();
 
     if (platformFiles.length > 1) {
       final zipFile = await _compressFiles(platformFiles);
@@ -43,20 +42,18 @@ class FileUploader with ChangeNotifier {
   Future<PlatformFile> _compressFiles(
     List<PlatformFile> platformFiles,
   ) async {
-    final cachePath = await _getCachePath();
-    final encoder = ZipFileEncoder();
-    encoder.create('$cachePath/out.zip');
+    final receivePort = ReceivePort();
+    final compressorIsolateParams = _CompressorIsolateParams(
+      sendPort: receivePort.sendPort,
+      platformFiles: platformFiles,
+      cachePath: await _getCachePath(),
+    );
 
-    for (var file in platformFiles) {
-      if (!_uploadAborted) {
-        await Future(() {
-          encoder.addFile(File(file.path!));
-        });
-      }
-    }
+    // Compress files in a separate isolate
+    await Isolate.spawn(_compressInIsolate, compressorIsolateParams);
 
-    final zipPath = encoder.zip_path;
-    encoder.close();
+    final sendPort = await receivePort.first;
+    final zipPath = await sendReceive(sendPort, 'zipPath');
 
     final zipPlatformFile = await _toPlatformFile(File(zipPath));
     return zipPlatformFile;
@@ -144,12 +141,52 @@ class FileUploader with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _waitForPageTransition() async {
-    await Future.delayed(const Duration(milliseconds: 300));
-  }
-
-  Future<String> _getCachePath() async {
+  static Future<String> _getCachePath() async {
     Directory cacheDir = await getTemporaryDirectory();
     return cacheDir.path;
   }
+
+  static void _compressInIsolate(_CompressorIsolateParams params) async {
+    // Open the ReceivePort for incoming messages.
+    final port = ReceivePort();
+
+    // Notify any other isolates what port this isolate listens to.
+    params.sendPort.send(port.sendPort);
+
+    final encoder = ZipFileEncoder();
+    encoder.create('${params.cachePath}/out.zip');
+
+    for (var file in params.platformFiles) {
+      encoder.addFile(File(file.path!));
+    }
+
+    final zipPath = encoder.zip_path;
+    encoder.close();
+
+    await for (var msg in port) {
+      SendPort replyTo = msg[1];
+      replyTo.send(zipPath);
+    }
+  }
+}
+
+/// sends a message on a port, receives the response,
+/// and returns the message
+Future sendReceive(SendPort port, msg) {
+  ReceivePort response = ReceivePort();
+  port.send([msg, response.sendPort]);
+  return response.first;
+}
+
+/// Arguments passed to isolate for file compression
+class _CompressorIsolateParams {
+  _CompressorIsolateParams({
+    required this.sendPort,
+    required this.platformFiles,
+    required this.cachePath,
+  });
+
+  SendPort sendPort;
+  List<PlatformFile> platformFiles;
+  String cachePath;
 }

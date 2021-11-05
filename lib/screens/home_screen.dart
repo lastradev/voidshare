@@ -2,11 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:void_share/widgets/custom_snack_bar.dart';
 
 import '../providers/file_manager.dart';
 import '../providers/file_uploader.dart';
-import '../widgets/custom_alert_dialog.dart';
+import '../widgets/custom_snack_bar.dart';
 import '../widgets/file_clearer.dart';
 import '../widgets/file_loading_indicator.dart';
 import '../widgets/select_files_container.dart';
