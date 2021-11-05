@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:void_share/widgets/custom_snack_bar.dart';
 
 import '../providers/file_manager.dart';
 import '../providers/file_uploader.dart';
@@ -29,6 +30,7 @@ class HomeScreen extends StatelessWidget {
         visible:
             fileManager.filesData.isNotEmpty && !fileManager.isLoadingFiles,
         child: FloatingActionButton(
+          tooltip: 'Upload files',
           onPressed: () async {
             if (isUploading) {
               return;
@@ -47,18 +49,12 @@ class HomeScreen extends StatelessWidget {
               );
             } on HttpException catch (e) {
               Navigator.of(context).pop();
-              CustomAlertDialog.showCustomAlertDialog(
-                context: context,
-                title: 'Upload Canceled',
-                message: e.message,
-              );
+              CustomSnackBar.showSnackBar(context, e.message);
             } on SocketException {
               Navigator.of(context).pop();
-              CustomAlertDialog.showCustomAlertDialog(
-                context: context,
-                title: 'Connection Error',
-                message:
-                    'VoidShare encountered an error while trying to connect to the server, try again.',
+              CustomSnackBar.showSnackBar(
+                context,
+                'Error trying to connect to the server.',
               );
             }
 

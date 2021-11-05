@@ -6,34 +6,36 @@ import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as p;
+import 'package:path/path.dart' as path_utils;
 import 'package:path_provider/path_provider.dart';
 
 typedef OnUploadProgressCallback = void Function(int sentBytes, int totalBytes);
+const String _serverUrl = '0x0.st';
 
 class FileUploader with ChangeNotifier {
   int uploadPercentage = 0;
-  bool _requestAborted = false;
+  bool _uploadAborted = false;
 
   Future<String> uploadFiles(List<PlatformFile> platformFiles) async {
+    uploadPercentage = 0;
+    _uploadAborted = false;
+
+    await _waitForPageTransition();
+
     if (platformFiles.length > 1) {
       final zipFile = await _compressFiles(platformFiles);
       final url = await _fileUploadMultipart(
         file: File(zipFile.path!),
-        onUploadProgress: (sentBytes, totalBytes) {
-          uploadPercentage = (sentBytes * 100 / totalBytes).floor();
-          notifyListeners();
-        },
+        onUploadProgress: (sentBytes, totalBytes) =>
+            _updateUploadPercentage(sentBytes, totalBytes),
       );
       return url;
     }
 
     final url = await _fileUploadMultipart(
       file: File(platformFiles.first.path!),
-      onUploadProgress: (sentBytes, totalBytes) {
-        uploadPercentage = (sentBytes * 100 / totalBytes).floor();
-        notifyListeners();
-      },
+      onUploadProgress: (sentBytes, totalBytes) =>
+          _updateUploadPercentage(sentBytes, totalBytes),
     );
     return url;
   }
@@ -41,17 +43,12 @@ class FileUploader with ChangeNotifier {
   Future<PlatformFile> _compressFiles(
     List<PlatformFile> platformFiles,
   ) async {
-    Directory tempDir = await getTemporaryDirectory();
-    String tempPath = tempDir.path;
+    final cachePath = await _getCachePath();
     final encoder = ZipFileEncoder();
-
-    encoder.create('$tempPath/out.zip');
-
-    // Avoids choppy transition between home and uploading screens
-    await Future.delayed(const Duration(milliseconds: 300));
+    encoder.create('$cachePath/out.zip');
 
     for (var file in platformFiles) {
-      if (!_requestAborted) {
+      if (!_uploadAborted) {
         await Future(() {
           encoder.addFile(File(file.path!));
         });
@@ -68,7 +65,7 @@ class FileUploader with ChangeNotifier {
   Future<PlatformFile> _toPlatformFile(File file) async {
     return PlatformFile(
       path: file.path,
-      name: p.basename(file.path),
+      name: path_utils.basename(file.path),
       size: await file.length(),
       readStream: file.openRead(),
     );
@@ -80,76 +77,79 @@ class FileUploader with ChangeNotifier {
     required File file,
     required OnUploadProgressCallback onUploadProgress,
   }) async {
-    final uri = Uri.https('0x0.st', '/');
-
     final httpClient = HttpClient();
-
+    final uri = Uri.https(_serverUrl, '/');
     final request = await httpClient.postUrl(uri);
 
     int byteCount = 0;
 
-    var multipart = await http.MultipartFile.fromPath('file', file.path);
-
-    var requestMultipart = http.MultipartRequest('POST', uri);
-
-    requestMultipart.files.add(multipart);
-
-    var msStream = requestMultipart.finalize();
-
-    var totalByteLength = requestMultipart.contentLength;
-
+    final multipartFile = await http.MultipartFile.fromPath('file', file.path);
+    final multipartRequest = http.MultipartRequest('POST', uri);
+    multipartRequest.files.add(multipartFile);
+    final msStream = multipartRequest.finalize();
+    final totalByteLength = multipartRequest.contentLength;
     request.contentLength = totalByteLength;
 
     request.headers.set(
       HttpHeaders.contentTypeHeader,
-      requestMultipart.headers[HttpHeaders.contentTypeHeader]!,
+      multipartRequest.headers[HttpHeaders.contentTypeHeader]!,
     );
 
-    Stream<List<int>> streamUpload = msStream.transform(
+    Stream<List<int>> uploadStream = msStream.transform(
       StreamTransformer.fromHandlers(
         handleData: (data, sink) {
-          if (_requestAborted) {
+          if (_uploadAborted) {
             request.abort();
             return;
           }
 
           sink.add(data);
-
           byteCount += data.length;
-
           onUploadProgress(byteCount, totalByteLength);
-          // CALL STATUS CALLBACK;
         },
         handleError: (error, stack, sink) {
           throw error;
         },
         handleDone: (sink) {
-          uploadPercentage = 0;
-          _requestAborted = false;
           sink.close();
-          // UPLOAD DONE;
         },
       ),
     );
 
-    await request.addStream(streamUpload);
-
+    await request.addStream(uploadStream);
     final httpResponse = await request.close();
-
-    var statusCode = httpResponse.statusCode;
+    final statusCode = httpResponse.statusCode;
 
     if (statusCode ~/ 100 != 2) {
-      uploadPercentage = 0;
-      throw Exception(
-        'Error uploading file, Status code: ${httpResponse.statusCode}',
+      throw const HttpException(
+        'Error uploading file, please try again',
       );
     } else {
-      uploadPercentage = 0;
-      return httpResponse.transform(const Utf8Decoder()).join();
+      return await _transformAndJoinHttpResponse(httpResponse);
     }
   }
 
-  void abortRequest() {
-    _requestAborted = true;
+  void abortUpload() {
+    _uploadAborted = true;
+  }
+
+  Future<String> _transformAndJoinHttpResponse(
+    HttpClientResponse httpResponse,
+  ) async {
+    return await httpResponse.transform(const Utf8Decoder()).join();
+  }
+
+  void _updateUploadPercentage(sentBytes, totalBytes) {
+    uploadPercentage = (sentBytes * 100 / totalBytes).floor();
+    notifyListeners();
+  }
+
+  Future<void> _waitForPageTransition() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+  }
+
+  Future<String> _getCachePath() async {
+    Directory cacheDir = await getTemporaryDirectory();
+    return cacheDir.path;
   }
 }
