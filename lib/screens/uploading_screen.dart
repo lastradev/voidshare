@@ -29,11 +29,7 @@ class UploadingScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.headline5,
                 ),
                 const SizedBox(height: 10),
-                Text(
-                  fileUploader.uploadAborted
-                      ? 'Aborting upload...'
-                      : 'This may take a while...',
-                ),
+                const Text('This may take a while...'),
               ],
             ),
             Column(
@@ -41,13 +37,27 @@ class UploadingScreen extends StatelessWidget {
                 Stack(
                   alignment: Alignment.center,
                   children: [
-                    Text(
-                      '${fileUploader.uploadPercentage}%',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5!
-                          .copyWith(color: Colors.blue),
-                    ),
+                    fileUploader.uploadAborted
+                        ? Column(
+                            children: [
+                              Icon(
+                                Icons.cancel_rounded,
+                                color: Colors.red.shade400,
+                                size: 30,
+                              ),
+                              const Text(
+                                'Aborting upload',
+                                style: TextStyle(fontSize: 10),
+                              )
+                            ],
+                          )
+                        : Text(
+                            '${fileUploader.uploadPercentage}%',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5!
+                                .copyWith(color: Colors.blue),
+                          ),
                     SizedBox(
                       height: 110,
                       width: 110,
