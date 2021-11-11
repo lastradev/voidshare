@@ -16,6 +16,7 @@ class FileUploader with ChangeNotifier {
   bool _uploadAborted = false;
 
   Future<String> uploadFiles(List<PlatformFile> platformFiles) async {
+    // Reset values when function invoke
     uploadPercentage = 0;
     _uploadAborted = false;
 
@@ -96,6 +97,7 @@ class FileUploader with ChangeNotifier {
   }
 
   void abortUpload() {
+    _fileCompressor.abortCompression();
     _uploadAborted = true;
   }
 

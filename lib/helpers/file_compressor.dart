@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
 
@@ -23,6 +24,11 @@ class FileCompressor {
     await Isolate.spawn(_compressInIsolate, compressorIsolateParams);
 
     final sendPort = await receivePort.first;
+
+    // Possible abort
+    // Uncomment to abort compression
+    //sendReceive(sendPort, 'abort');
+
     final zipPath = await sendReceive(sendPort, 'zipPath');
 
     final zipPlatformFile = await _toPlatformFile(File(zipPath));
@@ -44,25 +50,42 @@ class FileCompressor {
   }
 
   static void _compressInIsolate(CompressorIsolateParams params) async {
+    final zipPath = '${params.cachePath}/out.zip';
     // Open the ReceivePort for incoming messages.
     final port = ReceivePort();
-
     // Notify any other isolates what port this isolate listens to.
     params.sendPort.send(port.sendPort);
 
+    bool abort = false;
+    late SendPort zipPathPort;
+
     final encoder = ZipFileEncoder();
-    encoder.create('${params.cachePath}/out.zip');
+    encoder.create(zipPath);
 
-    for (var file in params.platformFiles) {
-      encoder.addFile(File(file.path!));
-    }
+    // Listen for an abort message to stop compressing
+    port.listen((msg) async {
+      if (msg[0] == 'abort') {
+        abort = true;
+      }
+      if (msg[0] == 'zipPath') {
+        zipPathPort = msg[1];
+      }
+    });
 
-    final zipPath = encoder.zip_path;
+    await Future(() {
+      for (var file in params.platformFiles) {
+        if (abort) {
+          break;
+        }
+        encoder.addFile(File(file.path!));
+      }
+    });
+
     encoder.close();
+    zipPathPort.send(zipPath);
+  }
 
-    await for (var msg in port) {
-      SendPort replyTo = msg[1];
-      replyTo.send(zipPath);
-    }
+  void abortCompression() {
+    // Abort button pressed
   }
 }
