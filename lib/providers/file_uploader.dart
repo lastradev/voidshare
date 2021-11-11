@@ -13,12 +13,12 @@ final _fileCompressor = FileCompressor();
 
 class FileUploader with ChangeNotifier {
   int uploadPercentage = 0;
-  bool _uploadAborted = false;
+  bool uploadAborted = false;
 
   Future<String> uploadFiles(List<PlatformFile> platformFiles) async {
     // Reset values when function invoke
     uploadPercentage = 0;
-    _uploadAborted = false;
+    uploadAborted = false;
 
     if (platformFiles.length > 1) {
       final zipFile = await _fileCompressor.compressFiles(platformFiles);
@@ -65,7 +65,7 @@ class FileUploader with ChangeNotifier {
     Stream<List<int>> uploadStream = msStream.transform(
       StreamTransformer.fromHandlers(
         handleData: (data, sink) {
-          if (_uploadAborted) {
+          if (uploadAborted) {
             request.abort();
             return;
           }
@@ -98,7 +98,8 @@ class FileUploader with ChangeNotifier {
 
   void abortUpload() {
     _fileCompressor.abortCompression();
-    _uploadAborted = true;
+    uploadAborted = true;
+    notifyListeners();
   }
 
   Future<String> _transformAndJoinHttpResponse(

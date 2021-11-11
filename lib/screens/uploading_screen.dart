@@ -29,7 +29,11 @@ class UploadingScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.headline5,
                 ),
                 const SizedBox(height: 10),
-                const Text('This may take a while...'),
+                Text(
+                  fileUploader.uploadAborted
+                      ? 'Aborting upload...'
+                      : 'This may take a while...',
+                ),
               ],
             ),
             Column(

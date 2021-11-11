@@ -10,10 +10,14 @@ import 'package:path_provider/path_provider.dart';
 import 'isolate_helpers.dart';
 
 class FileCompressor {
+  late ReceivePort receivePort;
+  late SendPort sendPort;
+
   Future<PlatformFile> compressFiles(
     List<PlatformFile> platformFiles,
   ) async {
-    final receivePort = ReceivePort();
+    _initRecievePort();
+
     final compressorIsolateParams = CompressorIsolateParams(
       sendPort: receivePort.sendPort,
       platformFiles: platformFiles,
@@ -23,16 +27,25 @@ class FileCompressor {
     // Compress files in a separate isolate
     await Isolate.spawn(_compressInIsolate, compressorIsolateParams);
 
-    final sendPort = await receivePort.first;
-
-    // Possible abort
-    // Uncomment to abort compression
-    //sendReceive(sendPort, 'abort');
+    await _initSendPort();
 
     final zipPath = await sendReceive(sendPort, 'zipPath');
 
     final zipPlatformFile = await _toPlatformFile(File(zipPath));
     return zipPlatformFile;
+  }
+
+  void abortCompression() {
+    // Abort button pressed
+    sendReceive(sendPort, 'abort');
+  }
+
+  void _initRecievePort() {
+    receivePort = ReceivePort();
+  }
+
+  Future<void> _initSendPort() async {
+    sendPort = await receivePort.first;
   }
 
   static Future<String> _getCachePath() async {
@@ -63,7 +76,7 @@ class FileCompressor {
     encoder.create(zipPath);
 
     // Listen for an abort message to stop compressing
-    port.listen((msg) async {
+    port.listen((msg) {
       if (msg[0] == 'abort') {
         abort = true;
       }
@@ -72,20 +85,16 @@ class FileCompressor {
       }
     });
 
-    await Future(() {
-      for (var file in params.platformFiles) {
-        if (abort) {
-          break;
-        }
-        encoder.addFile(File(file.path!));
+    for (var file in params.platformFiles) {
+      if (abort) {
+        break;
       }
-    });
+      await Future(() {
+        encoder.addFile(File(file.path!));
+      });
+    }
 
     encoder.close();
     zipPathPort.send(zipPath);
-  }
-
-  void abortCompression() {
-    // Abort button pressed
   }
 }
