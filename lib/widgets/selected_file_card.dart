@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../helpers/formatters.dart';
 import '../providers/file_manager.dart';
-import 'custom_snack_bar.dart';
+import 'custom_snack_bars.dart';
 
 class SelectedFileCard extends StatelessWidget {
   const SelectedFileCard({
@@ -105,7 +105,7 @@ class SelectedFileCard extends StatelessWidget {
       onDismissed: (_) {
         final index = fileManager.removeFile(fileData);
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        CustomSnackBar.showSnackBar(
+        CustomSnackBars.showFileRemoveSnackBar(
           context,
           'File removed',
           action: SnackBarAction(

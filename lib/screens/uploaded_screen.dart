@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+
 import '../providers/file_manager.dart';
-import '../widgets/custom_snack_bar.dart';
+import '../widgets/custom_snack_bars.dart';
 
 class UploadedScreen extends StatelessWidget {
   const UploadedScreen({Key? key}) : super(key: key);
@@ -70,7 +71,7 @@ class UploadedScreen extends StatelessWidget {
                       color: Colors.blue,
                       onPressed: () =>
                           Clipboard.setData(ClipboardData(text: url)).then((_) {
-                        CustomSnackBar.showSnackBar(
+                        CustomSnackBars.showClipboardSnackBar(
                           context,
                           'URL copied to clipboard',
                         );

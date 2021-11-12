@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/file_manager.dart';
 import '../providers/file_uploader.dart';
-import '../widgets/custom_snack_bar.dart';
+import '../widgets/custom_snack_bars.dart';
 import '../widgets/file_clearer.dart';
 import '../widgets/file_loading_indicator.dart';
 import '../widgets/select_files_container.dart';
@@ -48,12 +48,12 @@ class HomeScreen extends StatelessWidget {
               );
             } on HttpException catch (e) {
               Navigator.of(context).pop();
-              CustomSnackBar.showSnackBar(context, e.message);
+              CustomSnackBars.showErrorSnackBar(context, e.message);
             } on SocketException {
               Navigator.of(context).pop();
-              CustomSnackBar.showSnackBar(
+              CustomSnackBars.showErrorSnackBar(
                 context,
-                'Error trying to connect to the server.',
+                'Server error, try again.',
               );
             }
 
