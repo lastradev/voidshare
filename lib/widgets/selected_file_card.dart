@@ -107,7 +107,7 @@ class SelectedFileCard extends StatelessWidget {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         CustomSnackBars.showFileRemoveSnackBar(
           context,
-          'File removed',
+          'File removed.',
           action: SnackBarAction(
             label: 'UNDO',
             onPressed: () => fileManager.addFile(index, fileData),

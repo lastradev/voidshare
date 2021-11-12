@@ -24,8 +24,12 @@ class FileClearer extends StatelessWidget {
               ),
             ),
             TextButton(
+              onPressed: () {
+                // Avoids UNDO action after clearing cached image
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                fileManager.removeFiles();
+              },
               child: const Text('Clear'),
-              onPressed: () => fileManager.removeFiles(),
             ),
           ],
         ),

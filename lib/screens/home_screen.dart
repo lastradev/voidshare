@@ -66,6 +66,7 @@ class HomeScreen extends StatelessWidget {
         title: const Text('VoidShare'),
         actions: [
           IconButton(
+            tooltip: 'History',
             onPressed: () =>
                 Navigator.of(context).pushNamed(HistoryScreen.routeName),
             icon: const Icon(

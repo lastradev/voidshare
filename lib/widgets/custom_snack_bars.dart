@@ -12,8 +12,6 @@ class CustomSnackBars {
       SnackBar(
         duration: duration ?? const Duration(seconds: 2),
         elevation: 6,
-        backgroundColor: Colors.grey.shade800.withOpacity(0.9),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         behavior: SnackBarBehavior.floating,
         content: Text(title),
         action: noAction
@@ -58,7 +56,6 @@ class CustomSnackBars {
       SnackBar(
         duration: const Duration(seconds: 2),
         elevation: 6,
-        backgroundColor: Colors.grey.shade800.withOpacity(0.9),
         behavior: SnackBarBehavior.floating,
         content: Row(
           mainAxisAlignment: MainAxisAlignment.center,
