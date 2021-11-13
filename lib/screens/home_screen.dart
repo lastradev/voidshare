@@ -11,6 +11,7 @@ import '../widgets/file_loading_indicator.dart';
 import '../widgets/select_files_container.dart';
 import '../widgets/selected_file_card.dart';
 import '../widgets/terms_subtitle.dart';
+import 'error_screen.dart';
 import 'history_screen.dart';
 import 'uploaded_screen.dart';
 import 'uploading_screen.dart';
@@ -31,30 +32,42 @@ class HomeScreen extends StatelessWidget {
         child: FloatingActionButton(
           tooltip: 'Upload files',
           onPressed: () async {
+            // Avoids function spam
             if (isUploading) {
               return;
             }
-
             isUploading = true;
-            Navigator.of(context).pushNamed(
-              UploadingScreen.routeName,
-            );
 
-            try {
-              final url = await fileUploader.uploadFiles(fileManager.filesData);
-              Navigator.of(context).pushReplacementNamed(
-                UploadedScreen.routeName,
-                arguments: url.trim(),
-              );
-            } on HttpException catch (e) {
-              Navigator.of(context).pop();
-              CustomSnackBars.showErrorSnackBar(context, e.message);
-            } on SocketException {
-              Navigator.of(context).pop();
-              CustomSnackBars.showErrorSnackBar(
-                context,
-                'Server error, try again.',
-              );
+            // Keep retrying until success or abort
+            while (true) {
+              try {
+                Navigator.of(context).pushNamed(
+                  UploadingScreen.routeName,
+                );
+                final url =
+                    await fileUploader.uploadFiles(fileManager.filesData);
+                Navigator.of(context).pushReplacementNamed(
+                  UploadedScreen.routeName,
+                  arguments: url.trim(),
+                );
+                break;
+              // Catch abort operation
+              } on HttpException catch (e) {
+                Navigator.of(context).pop();
+                CustomSnackBars.showErrorSnackBar(context, e.message);
+                break;
+              } on SocketException {
+                // Don't retry if abort
+                if (fileUploader.uploadAborted) {
+                  Navigator.of(context).pop();
+                  break;
+                }
+
+                final retry = await Navigator.of(context).pushReplacementNamed(
+                  ErrorScreen.routeName,
+                );
+                if (retry == null) break;
+              }
             }
 
             isUploading = false;

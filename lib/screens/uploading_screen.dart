@@ -11,7 +11,12 @@ class UploadingScreen extends StatelessWidget {
     final fileUploader = Provider.of<FileUploader>(context);
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: fileUploader.abortUpload,
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: fileUploader.abortUpload,
         backgroundColor: Colors.red.shade400,

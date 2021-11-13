@@ -1,3 +1,11 @@
+/// [FileCompressor] class uses an isolate to compress multiple files without
+/// freezing the UI. It depends on archive io package.
+///
+/// call [compressFiles] to begin the compression and expect a zip data file
+/// in return.
+///
+/// Compression can be stopped with [abortCompression] function.
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'app_theme.dart';
 import 'providers/file_manager.dart';
 import 'providers/file_uploader.dart';
+import 'screens/error_screen.dart';
 import 'screens/history_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/uploaded_screen.dart';
@@ -53,6 +54,12 @@ class MyApp extends StatelessWidget {
             case UploadingScreen.routeName:
               return PageTransition(
                 child: const UploadingScreen(),
+                type: PageTransitionType.fade,
+                settings: settings,
+              );
+            case ErrorScreen.routeName:
+              return PageTransition(
+                child: const ErrorScreen(),
                 type: PageTransitionType.fade,
                 settings: settings,
               );
