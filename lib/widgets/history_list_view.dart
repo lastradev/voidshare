@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import '../helpers/formatters.dart';
 
 import '../models/history_entry.dart';
 import 'custom_snack_bars.dart';
@@ -37,13 +39,14 @@ class HistoryListView extends StatelessWidget {
                   onTap: () {
                     CustomSnackBars.showCustomSnackBar(
                       context,
-                      'Expiration: ${entry.expirationDate}',
+                      'File expires in ${entry.getFileRetention()} days.',
                     );
                   },
                   leading: Image.asset('assets/images/folder.png', width: 50),
                   title: Text(entry.name),
-                  subtitle:
-                      Text('${entry.size.toString()} - ${entry.uploadDate}'),
+                  subtitle: Text(
+                    '${Formatters.formatBytes(entry.size, 1)} - ${DateFormat('dd/MMM/yyyy').format(entry.uploadDate)}',
+                  ),
                   contentPadding: const EdgeInsets.only(
                     left: 16,
                     top: 10,

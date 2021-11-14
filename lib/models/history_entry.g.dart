@@ -18,17 +18,16 @@ class HistoryEntryAdapter extends TypeAdapter<HistoryEntry> {
     };
     return HistoryEntry(
       name: fields[0] as String,
-      size: fields[1] as double,
+      size: fields[1] as int,
       url: fields[2] as String,
       uploadDate: fields[3] as DateTime,
-      expirationDate: fields[4] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, HistoryEntry obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -36,9 +35,7 @@ class HistoryEntryAdapter extends TypeAdapter<HistoryEntry> {
       ..writeByte(2)
       ..write(obj.url)
       ..writeByte(3)
-      ..write(obj.uploadDate)
-      ..writeByte(4)
-      ..write(obj.expirationDate);
+      ..write(obj.uploadDate);
   }
 
   @override
