@@ -1,26 +1,18 @@
 import 'package:flutter/material.dart';
 
 class CustomSnackBars {
-  static void showFileRemoveSnackBar(
+  static void showCustomSnackBar(
     BuildContext context,
     String title, {
     SnackBarAction? action,
     Duration? duration,
-    bool noAction = false,
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: duration ?? const Duration(seconds: 2),
-        elevation: 6,
         behavior: SnackBarBehavior.floating,
         content: Text(title),
-        action: noAction
-            ? null
-            : action ??
-                SnackBarAction(
-                  label: 'Ok',
-                  onPressed: () {},
-                ),
+        action: action,
       ),
     );
   }

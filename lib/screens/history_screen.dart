@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+
 import '../models/history_entry.dart';
+import '../widgets/history_list_view.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({Key? key}) : super(key: key);
@@ -22,26 +24,31 @@ class _HistoryScreenState extends State<HistoryScreen> {
             if (snapshot.hasError) {
               return Text(snapshot.error.toString());
             } else {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          'Upload History',
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                        const Text('Nothing here yet...'),
-                      ],
-                    ),
-                    Image.asset(
-                      'assets/images/flat_characters.webp',
-                      height: MediaQuery.of(context).size.height / 2.5,
-                    ),
-                  ],
-                ),
-              );
+              final historyBox = Hive.box<HistoryEntry>('history');
+              if (historyBox.length > 0) {
+                return const HistoryListView();
+              } else {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            'Upload History',
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
+                          const Text('Nothing here yet...'),
+                        ],
+                      ),
+                      Image.asset(
+                        'assets/images/flat_characters.webp',
+                        height: MediaQuery.of(context).size.height / 2.5,
+                      ),
+                    ],
+                  ),
+                );
+              }
             }
           } else {
             return const SizedBox.shrink();

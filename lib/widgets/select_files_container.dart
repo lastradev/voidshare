@@ -28,19 +28,18 @@ class SelectFilesContainer extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.drive_folder_upload_rounded,
-                color: fileManager.isLoadingFiles
-                    ? Colors.blue.withOpacity(0.3)
-                    : Colors.blue,
-                size: 70,
-              ),
+              fileManager.isLoadingFiles
+                  ? Opacity(
+                      opacity: 0.3,
+                      child: _buildFolderImage(),
+                    )
+                  : _buildFolderImage(),
               Text(
                 'Select files',
                 style: TextStyle(
                   color: fileManager.isLoadingFiles
                       ? Colors.blue.withOpacity(0.5)
-                      : Colors.blue,
+                      : Colors.lightBlue,
                 ),
               ),
             ],
@@ -48,5 +47,9 @@ class SelectFilesContainer extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Image _buildFolderImage() {
+    return Image.asset('assets/images/folder.png', height: 70);
   }
 }
