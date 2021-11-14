@@ -97,6 +97,7 @@ class FileCompressor {
       if (abort) {
         break;
       }
+      // Future allows the port to listen while compressing
       await Future(() {
         encoder.addFile(File(file.path!));
       });
