@@ -4,63 +4,37 @@ import 'package:hive/hive.dart';
 import '../models/history_entry.dart';
 import '../widgets/history_list_view.dart';
 
-class HistoryScreen extends StatefulWidget {
+class HistoryScreen extends StatelessWidget {
   const HistoryScreen({Key? key}) : super(key: key);
   static const routeName = '/history';
 
   @override
-  State<HistoryScreen> createState() => _HistoryScreenState();
-}
-
-class _HistoryScreenState extends State<HistoryScreen> {
-  @override
   Widget build(BuildContext context) {
+    final historyBox = Hive.box<HistoryEntry>('history');
     return Scaffold(
       appBar: AppBar(title: const Text('History')),
-      body: FutureBuilder(
-        future: Hive.openBox<HistoryEntry>('history'),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError) {
-              return Text(snapshot.error.toString());
-            } else {
-              final historyBox = Hive.box<HistoryEntry>('history');
-              if (historyBox.length > 0) {
-                return const HistoryListView();
-              } else {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: historyBox.length > 0
+          ? const HistoryListView()
+          : Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
                     children: [
-                      Column(
-                        children: [
-                          Text(
-                            'Upload History',
-                            style: Theme.of(context).textTheme.headline4,
-                          ),
-                          const Text('Nothing here yet...'),
-                        ],
+                      Text(
+                        'History',
+                        style: Theme.of(context).textTheme.headline4,
                       ),
-                      Image.asset(
-                        'assets/images/flat_characters.webp',
-                        height: MediaQuery.of(context).size.height / 2.5,
-                      ),
+                      const Text('Nothing here yet'),
                     ],
                   ),
-                );
-              }
-            }
-          } else {
-            return const SizedBox.shrink();
-          }
-        },
-      ),
+                  Image.asset(
+                    'assets/images/flat_characters.webp',
+                    height: MediaQuery.of(context).size.height / 2.5,
+                  ),
+                ],
+              ),
+            ),
     );
-  }
-
-  @override
-  void dispose() {
-    Hive.box<HistoryEntry>('history').close();
-    super.dispose();
   }
 }

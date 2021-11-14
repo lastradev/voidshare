@@ -22,7 +22,7 @@ class HistoryEntry {
   @HiveField(3)
   final DateTime uploadDate;
 
-  int getFileRetention() {
+  int get retention {
     final daysSinceUpload = DateTime.now().difference(uploadDate).inDays;
 
     const minAge = 30;

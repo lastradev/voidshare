@@ -36,10 +36,10 @@ class HistoryListView extends StatelessWidget {
                   bottom: 5,
                 ),
                 child: ListTile(
-                  onTap: () {
+                  onLongPress: () {
                     CustomSnackBars.showCustomSnackBar(
                       context,
-                      'File expires in ${entry.getFileRetention()} days.',
+                      'File expires in ${entry.retention} days.',
                     );
                   },
                   leading: Image.asset('assets/images/folder.png', width: 50),

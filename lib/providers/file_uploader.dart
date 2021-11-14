@@ -4,12 +4,16 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
+
 import '../helpers/file_compressor.dart';
+import '../models/history_entry.dart';
 
 typedef OnUploadProgressCallback = void Function(int sentBytes, int totalBytes);
 const String _serverUrl = '0x0.st';
 final _fileCompressor = FileCompressor();
+final _historyBox = Hive.box<HistoryEntry>('history');
 
 class FileUploader with ChangeNotifier {
   int uploadPercentage = 0;
@@ -19,23 +23,38 @@ class FileUploader with ChangeNotifier {
     // Reset values when function invoke
     uploadPercentage = 0;
     uploadAborted = false;
+    PlatformFile platformFile;
+    bool compressFile = platformFiles.length > 1;
 
-    if (platformFiles.length > 1) {
-      final zipFile = await _fileCompressor.compressFiles(platformFiles);
-      final url = await _fileUploadMultipart(
-        file: File(zipFile.path!),
-        onUploadProgress: (sentBytes, totalBytes) =>
-            _updateUploadPercentage(sentBytes, totalBytes),
-      );
-      return url;
+    if (compressFile) {
+      platformFile = await _fileCompressor.compressFiles(platformFiles);
+    } else {
+      platformFile = platformFiles.first;
     }
 
     final url = await _fileUploadMultipart(
-      file: File(platformFiles.first.path!),
+      file: File(platformFile.path!),
       onUploadProgress: (sentBytes, totalBytes) =>
           _updateUploadPercentage(sentBytes, totalBytes),
     );
+
+    _historyBox.add(
+      HistoryEntry(
+        // Url substring gets the name of the zip file https://0x0.st/XXXXX
+        name: compressFile ? url.substring(15).trim() : platformFile.name,
+        size: platformFile.size,
+        url: url,
+        uploadDate: DateTime.now(),
+      ),
+    );
+
     return url;
+  }
+
+  void abortUpload() {
+    _fileCompressor.abortCompression();
+    uploadAborted = true;
+    notifyListeners();
   }
 
   // based on salk52's function
@@ -94,12 +113,6 @@ class FileUploader with ChangeNotifier {
     } else {
       return await _transformAndJoinHttpResponse(httpResponse);
     }
-  }
-
-  void abortUpload() {
-    _fileCompressor.abortCompression();
-    uploadAborted = true;
-    notifyListeners();
   }
 
   Future<String> _transformAndJoinHttpResponse(
