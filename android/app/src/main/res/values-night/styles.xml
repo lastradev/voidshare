@@ -6,6 +6,7 @@
              Flutter draws its first frame -->
         <item name="android:windowBackground">@drawable/launch_background</item>
         <!-- Makes status bar white -->
+        <!-- https://stackoverflow.com/questions/63070943/flutter-android-is-it-possible-to-change-status-bar-color-on-splash-launch -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/white</item>
     </style>

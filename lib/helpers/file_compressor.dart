@@ -1,10 +1,5 @@
 /// [FileCompressor] class uses an isolate to compress multiple files without
-/// freezing the UI. It depends on archive io package.
-///
-/// call [compressFiles] to begin the compression and expect a zip data file
-/// in return.
-///
-/// Compression can be stopped with [abortCompression] function.
+/// freezing the UI. It depends on [archive_io] package.
 
 import 'dart:async';
 import 'dart:io';
@@ -17,43 +12,40 @@ import 'package:path_provider/path_provider.dart';
 
 import 'isolate_helpers.dart';
 
+/// An object that holds methods to compress into zip files and
+/// abort the compress operation in an [Isolate].
 class FileCompressor {
-  late ReceivePort receivePort;
-  late SendPort sendPort;
+  late ReceivePort _receivePort;
+  late SendPort _sendPort;
 
+  /// Begins compression and expect a zip data file in return.
   Future<PlatformFile> compressFiles(
     List<PlatformFile> platformFiles,
   ) async {
-    _initRecievePort();
+    _receivePort = ReceivePort();
 
     final compressorIsolateParams = CompressorIsolateParams(
-      sendPort: receivePort.sendPort,
+      sendPort: _receivePort.sendPort,
       platformFiles: platformFiles,
       cachePath: await _getCachePath(),
     );
 
-    // Compress files in a separate isolate
+    /// Compress files in a separate isolate.
     await Isolate.spawn(_compressInIsolate, compressorIsolateParams);
 
-    await _initSendPort();
+    /// Starts communication between isolates.
+    _sendPort = await _receivePort.first;
 
-    final zipPath = await sendReceive(sendPort, 'zipPath');
+    final zipPath = await sendReceive(_sendPort, 'zipPath');
 
     final zipPlatformFile = await _toPlatformFile(File(zipPath));
     return zipPlatformFile;
   }
 
+  /// Sends a message to the compressor isolate to stop compressing.
   void abortCompression() {
-    // Abort button pressed
-    sendReceive(sendPort, 'abort');
-  }
-
-  void _initRecievePort() {
-    receivePort = ReceivePort();
-  }
-
-  Future<void> _initSendPort() async {
-    sendPort = await receivePort.first;
+    // Abort button pressed.
+    sendReceive(_sendPort, 'abort');
   }
 
   static Future<String> _getCachePath() async {
@@ -66,28 +58,36 @@ class FileCompressor {
       path: file.path,
       name: path_utils.basename(file.path),
       size: await file.length(),
-      readStream: file.openRead(),
     );
   }
 
+  /// Runs the compression computation inside the [Isolate].
+  ///
+  /// It should send a String through a [SendPort] with the zip path whether
+  /// the compression was successful or not.
   static void _compressInIsolate(CompressorIsolateParams params) async {
     final zipPath = '${params.cachePath}/out.zip';
-    // Open the ReceivePort for incoming messages.
+    /// Open the ReceivePort for incoming messages.
     final port = ReceivePort();
-    // Notify any other isolates what port this isolate listens to.
-    params.sendPort.send(port.sendPort);
-
     bool abort = false;
     late SendPort zipPathPort;
 
+    /// Notify any other isolates what port this isolate listens to.
+    params.sendPort.send(port.sendPort);
+
+    // Create zip file.
     final encoder = ZipFileEncoder();
     encoder.create(zipPath);
 
-    // Listen for an abort message to stop compressing
     port.listen((msg) {
+      /// Listen for an abort message to stop compressing.
       if (msg[0] == 'abort') {
         abort = true;
       }
+      /// Listen for the message requesting the zipPath.
+      ///
+      /// The zipPath should be sent after the compression finishes,
+      /// that's why it is being assigned to a late variable.
       if (msg[0] == 'zipPath') {
         zipPathPort = msg[1];
       }
@@ -97,7 +97,8 @@ class FileCompressor {
       if (abort) {
         break;
       }
-      // Future allows the port to listen while compressing
+      /// Future allows the port to listen while compressing.
+      // Note: look for a better way to do this...
       await Future(() {
         encoder.addFile(File(file.path!));
       });

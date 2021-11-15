@@ -10,17 +10,27 @@ import 'package:http/http.dart' as http;
 import '../helpers/file_compressor.dart';
 import '../models/history_entry.dart';
 
-typedef OnUploadProgressCallback = void Function(int sentBytes, int totalBytes);
+typedef _OnUploadProgressCallback = void Function(
+  int sentBytes,
+  int totalBytes,
+);
 const String _serverUrl = '0x0.st';
 final _fileCompressor = FileCompressor();
 final _historyBox = Hive.box<HistoryEntry>('history');
 
+/// Handles upload operations to the 0x0.st server
 class FileUploader with ChangeNotifier {
   int uploadPercentage = 0;
   bool uploadAborted = false;
 
+  /// Uploads file / files(as Zip) to the server.
+  ///
+  /// Files are compressed if there's more than one.
+  /// If upload is successful, operation details will be stored in Hive database.
+  ///
+  /// Returns the file url.
   Future<String> uploadFiles(List<PlatformFile> platformFiles) async {
-    // Reset values when function invoke
+    /// Reset values when function invoke.
     uploadPercentage = 0;
     uploadAborted = false;
     PlatformFile platformFile;
@@ -38,9 +48,10 @@ class FileUploader with ChangeNotifier {
           _updateUploadPercentage(sentBytes, totalBytes),
     );
 
+    /// Store upload details in Hive database.
     _historyBox.add(
       HistoryEntry(
-        // Url substring gets the name of the zip file https://0x0.st/XXXXX
+        /// Url substring gets the name of the zip file https://0x0.st/XXXXX.
         name: compressFile ? url.substring(15).trim() : platformFile.name,
         size: platformFile.size,
         url: url,
@@ -51,17 +62,26 @@ class FileUploader with ChangeNotifier {
     return url;
   }
 
+  /// Stops the upload.
+  ///
+  /// Stops file compression.
+  /// Notifies listeners to reflect abort operation on UI.
   void abortUpload() {
     _fileCompressor.abortCompression();
     uploadAborted = true;
     notifyListeners();
   }
 
-  // based on salk52's function
-  // https://github.com/salk52/Flutter-File-Upload-Download/blob/master/upload_download_app/lib/services/file_service.dart
+  /// Starts an [http.MultipartRequest] to upload a file.
+  ///
+  /// based on salk52's function
+  /// https://github.com/salk52/Flutter-File-Upload-Download/blob/master/upload_download_app/lib/services/file_service.dart
+  ///
+  /// Uploads and listens to byte stream for upload percentage.
+  /// Returns the http response.
   Future<String> _fileUploadMultipart({
     required File file,
-    required OnUploadProgressCallback onUploadProgress,
+    required _OnUploadProgressCallback onUploadProgress,
   }) async {
     final httpClient = HttpClient();
     final uri = Uri.https(_serverUrl, '/');
@@ -111,16 +131,18 @@ class FileUploader with ChangeNotifier {
         'Error uploading file, please try again',
       );
     } else {
-      return await _transformAndJoinHttpResponse(httpResponse);
+      return await _decodeHttpResponse(httpResponse);
     }
   }
 
-  Future<String> _transformAndJoinHttpResponse(
+  /// Decodes a streamed http request response.
+  Future<String> _decodeHttpResponse(
     HttpClientResponse httpResponse,
   ) async {
     return await httpResponse.transform(const Utf8Decoder()).join();
   }
 
+  /// Updates file upload percentage on UI.
   void _updateUploadPercentage(sentBytes, totalBytes) {
     uploadPercentage = (sentBytes * 100 / totalBytes).floor();
     notifyListeners();

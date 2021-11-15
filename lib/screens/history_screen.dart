@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import '../models/history_entry.dart';
 import '../widgets/history_list_view.dart';
 
+/// Screen containing uploads history.
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({Key? key}) : super(key: key);
   static const routeName = '/history';

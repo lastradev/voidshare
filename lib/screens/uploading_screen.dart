@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/file_uploader.dart';
 
+/// File uploading screen.
 class UploadingScreen extends StatelessWidget {
   const UploadingScreen({Key? key}) : super(key: key);
   static const routeName = '/uploading';

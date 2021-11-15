@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../helpers/formatters.dart';
 import '../providers/file_manager.dart';
 
+/// Widget containing selected files total size and clear files action.
 class FileClearer extends StatelessWidget {
   const FileClearer({Key? key}) : super(key: key);
 

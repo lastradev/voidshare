@@ -32,13 +32,13 @@ class HomeScreen extends StatelessWidget {
         child: FloatingActionButton(
           tooltip: 'Upload files',
           onPressed: () async {
-            // Avoids function spam
+            /// Avoids function spam.
             if (isUploading) {
               return;
             }
             isUploading = true;
 
-            // Keep retrying until success or abort
+            /// Keep retrying until success or abort.
             while (true) {
               try {
                 Navigator.of(context).pushNamed(
@@ -51,13 +51,13 @@ class HomeScreen extends StatelessWidget {
                   arguments: url.trim(),
                 );
                 break;
-              // Catch abort operation
+              /// Catch abort operation.
               } on HttpException catch (e) {
                 Navigator.of(context).pop();
                 CustomSnackBars.showErrorSnackBar(context, e.message);
                 break;
               } on SocketException {
-                // Don't retry if abort
+                /// Don't retry if abort.
                 if (fileUploader.uploadAborted) {
                   Navigator.of(context).pop();
                   break;
@@ -88,9 +88,9 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      // Slivers needed for performance
-      // https://www.youtube.com/watch?v=LaMOIII96oU
-      // https://github.com/flutter/flutter/issues/26072#issuecomment-706724534
+      /// Slivers needed for performance.
+      /// https://www.youtube.com/watch?v=LaMOIII96oU.
+      /// https://github.com/flutter/flutter/issues/26072#issuecomment-706724534.
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(

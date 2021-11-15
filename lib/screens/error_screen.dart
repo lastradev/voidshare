@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Error screen for unsuccessful upload.
 class ErrorScreen extends StatelessWidget {
   const ErrorScreen({Key? key}) : super(key: key);
   static const routeName = '/error';
@@ -9,6 +10,7 @@ class ErrorScreen extends StatelessWidget {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
+        /// True value needed to retry upload.
         onPressed: () => Navigator.of(context).pop(true),
         icon: const Icon(Icons.refresh_rounded),
         label: const Text('TRY AGAIN'),

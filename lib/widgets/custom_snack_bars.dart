@@ -21,7 +21,7 @@ class CustomSnackBars {
     BuildContext context,
     String title,
   ) {
-    _showNotificationSnackBar(
+    _showIconSnackBar(
       context,
       Icon(Icons.cancel_outlined, color: Colors.red.shade500),
       title,
@@ -32,14 +32,14 @@ class CustomSnackBars {
     BuildContext context,
     String title,
   ) {
-    _showNotificationSnackBar(
+    _showIconSnackBar(
       context,
       Icon(Icons.check, color: Theme.of(context).primaryColor),
       title,
     );
   }
 
-  static void _showNotificationSnackBar(
+  static void _showIconSnackBar(
     BuildContext context,
     Icon icon,
     String title,

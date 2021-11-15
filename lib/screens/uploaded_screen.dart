@@ -6,6 +6,7 @@ import 'package:share_plus/share_plus.dart';
 import '../providers/file_manager.dart';
 import '../widgets/custom_snack_bars.dart';
 
+/// File uploaded screen.
 class UploadedScreen extends StatelessWidget {
   const UploadedScreen({Key? key}) : super(key: key);
   static const routeName = '/uploaded';
@@ -13,6 +14,7 @@ class UploadedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fileManager = Provider.of<FileManager>(context);
+    /// Url can't be obtained from constructor because screen is a named route.
     final url = ModalRoute.of(context)!.settings.arguments as String;
 
     return Scaffold(

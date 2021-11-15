@@ -15,12 +15,19 @@ import 'screens/uploaded_screen.dart';
 import 'screens/uploading_screen.dart';
 
 void main() async {
+  /// Sets navigation bar to white.
+  ///
+  /// Checkout styles.xml in android/app/src/main/res folder
+  /// for white color in status bar.
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       systemNavigationBarColor: Color(0xFFFAFAFA),
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
+
+  /// Hive database initialization and adapt class for its usage.
+  /// https://docs.hivedb.dev/#/custom-objects/type_adapters.
   await Hive.initFlutter();
   Hive.registerAdapter(HistoryEntryAdapter());
   await Hive.openBox<HistoryEntry>('history');
@@ -47,6 +54,8 @@ class _MyAppState extends State<MyApp> {
         theme: appTheme,
         title: 'VoidShare',
         home: const HomeScreen(),
+        /// Necessary for page transition,
+        /// https://pub.dev/packages/page_transition.
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case HistoryScreen.routeName:

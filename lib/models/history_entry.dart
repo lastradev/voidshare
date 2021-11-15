@@ -4,6 +4,10 @@ import 'package:hive/hive.dart';
 
 part 'history_entry.g.dart';
 
+// Note: If changing this file, see readme for how to regenerate
+// HistoryEntryAdapter class.
+
+/// Model class for Hive's history box, holds information about uploads.
 @HiveType(typeId: 0)
 class HistoryEntry {
   HistoryEntry({
@@ -22,17 +26,21 @@ class HistoryEntry {
   @HiveField(3)
   final DateTime uploadDate;
 
+  /// The number of days for the file to expire on the server.
+  ///
+  /// Measures obtained from https://0x0.st.
   int get retention {
     final daysSinceUpload = DateTime.now().difference(uploadDate).inDays;
 
-    const minAge = 30;
-    const maxAge = 365;
-    const maxSize = 536870912;
+    const minimumFileRetention = 30;
+    const maximumFileRetention = 365;
+    const maxFileSize = 536870912;
 
-    final originalRetention =
-        (minAge + (minAge - maxAge) * pow(size / maxSize - 1, 3)).floor();
+    /// As described in https://0x0.st.
+    final daysToExpire =
+        (minimumFileRetention + (minimumFileRetention - maximumFileRetention) * pow(size / maxFileSize - 1, 3)).floor();
 
-    final result = originalRetention - daysSinceUpload;
+    final result = daysToExpire - daysSinceUpload;
     return result;
   }
 }
