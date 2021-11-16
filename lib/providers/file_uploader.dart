@@ -22,6 +22,7 @@ final _historyBox = Hive.box<HistoryEntry>('history');
 class FileUploader with ChangeNotifier {
   int uploadPercentage = 0;
   bool isUploadAborted = false;
+  bool _isCompressOperation = false;
 
   /// Uploads file / files(as Zip) to the server.
   ///
@@ -35,9 +36,9 @@ class FileUploader with ChangeNotifier {
     isUploadAborted = false;
 
     PlatformFile platformFile;
-    bool isCompressOperation = platformFiles.length > 1;
+    _isCompressOperation = platformFiles.length > 1;
 
-    if (isCompressOperation) {
+    if (_isCompressOperation) {
       platformFile = await _fileCompressor.compressFiles(platformFiles);
     } else {
       platformFile = platformFiles.first;
@@ -54,7 +55,7 @@ class FileUploader with ChangeNotifier {
       HistoryEntry(
         /// Url substring gets the name of the zip file https://0x0.st/XXXXX.
         name:
-            isCompressOperation ? url.substring(15).trim() : platformFile.name,
+            _isCompressOperation ? url.substring(15).trim() : platformFile.name,
         size: platformFile.size,
         url: url,
         uploadDate: DateTime.now(),
@@ -69,7 +70,9 @@ class FileUploader with ChangeNotifier {
   /// Stops file compression.
   /// Notifies listeners to reflect abort operation on UI.
   void abortUpload() {
-    _fileCompressor.abortCompression();
+    if (_isCompressOperation) {
+      _fileCompressor.abortCompression();
+    }
     isUploadAborted = true;
     notifyListeners();
   }
