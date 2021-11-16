@@ -12,13 +12,13 @@ class UploadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fileUploader = Provider.of<FileUploader>(context);
-    bool uploadAborted = fileUploader.uploadAborted;
+    bool isUploadAborted = fileUploader.isUploadAborted;
 
     return WillPopScope(
       onWillPop: () async {
         CustomSnackBars.showCustomSnackBar(
           context,
-          'You must either abort the upload or wait for it to finish.',
+          'You must either cancel the upload or wait for it to finish.',
         );
         return false;
       },
@@ -52,7 +52,7 @@ class UploadingScreen extends StatelessWidget {
                   Stack(
                     alignment: Alignment.center,
                     children: [
-                      uploadAborted
+                      isUploadAborted
                           ? Column(
                               children: [
                                 Icon(
@@ -80,7 +80,7 @@ class UploadingScreen extends StatelessWidget {
                           value: fileUploader.uploadPercentage / 100,
                           backgroundColor: Colors.grey,
                           strokeWidth: 9,
-                          color: uploadAborted
+                          color: isUploadAborted
                               ? Colors.red.shade400
                               : Colors.lightBlue,
                         ),

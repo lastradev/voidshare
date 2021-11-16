@@ -10,11 +10,11 @@ import 'custom_snack_bars.dart';
 
 class SelectedFileCard extends StatelessWidget {
   const SelectedFileCard({
-    required this.fileData,
+    required this.file,
     Key? key,
   }) : super(key: key);
 
-  final PlatformFile fileData;
+  final PlatformFile file;
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +57,13 @@ class SelectedFileCard extends StatelessWidget {
                   margin: const EdgeInsets.all(8),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: fileManager.isImage(fileData)
+                    child: file.isImage
                         ? FadeInImage(
                             fit: BoxFit.cover,
                             width: 50,
                             height: 50,
                             image: FileImage(
-                              File(fileData.path!),
+                              File(file.path!),
                             ),
                             placeholder: const AssetImage(
                               'assets/images/file-icon.webp',
@@ -87,13 +87,13 @@ class SelectedFileCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        fileData.name,
+                        file.name,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.grey.shade800,
                         ),
                       ),
-                      Text(Formatters.formatBytes(fileData.size, 1)),
+                      Text(Formatters.formatBytes(file.size, 1)),
                     ],
                   ),
                 )
@@ -103,14 +103,14 @@ class SelectedFileCard extends StatelessWidget {
         ),
       ),
       onDismissed: (_) {
-        final index = fileManager.removeFile(fileData);
+        final index = fileManager.removeFile(file);
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         CustomSnackBars.showCustomSnackBar(
           context,
           'File removed.',
           action: SnackBarAction(
             label: 'UNDO',
-            onPressed: () => fileManager.addFile(index, fileData),
+            onPressed: () => fileManager.addFile(index, file),
           ),
         );
       },

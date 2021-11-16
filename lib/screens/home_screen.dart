@@ -27,15 +27,22 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       floatingActionButton: Visibility(
-        visible:
-            fileManager.filesData.isNotEmpty && !fileManager.isLoadingFiles,
+        visible: fileManager.files.isNotEmpty && !fileManager.isLoadingFiles,
         child: FloatingActionButton(
           tooltip: 'Upload files',
           onPressed: () async {
-            /// Avoids function spam.
             if (isUploading) {
               return;
             }
+
+            if (fileManager.files.isExcedingMaxSize) {
+              CustomSnackBars.showCustomSnackBar(
+                context,
+                'Files total size must be under 512 MB.',
+              );
+              return;
+            }
+
             isUploading = true;
 
             /// Keep retrying until success or abort.
@@ -44,21 +51,21 @@ class HomeScreen extends StatelessWidget {
                 Navigator.of(context).pushNamed(
                   UploadingScreen.routeName,
                 );
-                final url =
-                    await fileUploader.uploadFiles(fileManager.filesData);
+                final url = await fileUploader.uploadFiles(fileManager.files);
                 Navigator.of(context).pushReplacementNamed(
                   UploadedScreen.routeName,
                   arguments: url.trim(),
                 );
                 break;
-              /// Catch abort operation.
-              } on HttpException catch (e) {
+
+                /// Catch abort operation.
+              } on HttpException {
                 Navigator.of(context).pop();
-                CustomSnackBars.showErrorSnackBar(context, e.message);
+                CustomSnackBars.showCustomSnackBar(context, 'Upload canceled.');
                 break;
               } on SocketException {
                 /// Don't retry if abort.
-                if (fileUploader.uploadAborted) {
+                if (fileUploader.isUploadAborted) {
                   Navigator.of(context).pop();
                   break;
                 }
@@ -67,6 +74,14 @@ class HomeScreen extends StatelessWidget {
                   ErrorScreen.routeName,
                 );
                 if (retry == null) break;
+              } on FileSystemException {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                CustomSnackBars.showCustomSnackBar(
+                  context,
+                  'Could not retrieve file(s).',
+                );
+                break;
               }
             }
 
@@ -88,6 +103,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+
       /// Slivers needed for performance.
       /// https://www.youtube.com/watch?v=LaMOIII96oU.
       /// https://github.com/flutter/flutter/issues/26072#issuecomment-706724534.
@@ -121,10 +137,10 @@ class HomeScreen extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 return SelectedFileCard(
-                  fileData: fileManager.filesData[index],
+                  file: fileManager.files[index],
                 );
               },
-              childCount: fileManager.filesData.length,
+              childCount: fileManager.files.length,
             ),
           ),
         ],

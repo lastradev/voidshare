@@ -12,7 +12,7 @@ class FileClearer extends StatelessWidget {
     final fileManager = Provider.of<FileManager>(context);
 
     return Visibility(
-      visible: fileManager.filesData.isNotEmpty,
+      visible: fileManager.files.isNotEmpty,
       child: Container(
         margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
         child: Row(
@@ -21,7 +21,7 @@ class FileClearer extends StatelessWidget {
             Container(
               margin: const EdgeInsets.all(8),
               child: Text(
-                'Selected files - ${Formatters.formatBytes(fileManager.totalSize, 2)}',
+                'Selected files - ${Formatters.formatBytes(fileManager.files.totalSize, 2)}',
               ),
             ),
             TextButton(

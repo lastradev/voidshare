@@ -21,7 +21,7 @@ final _historyBox = Hive.box<HistoryEntry>('history');
 /// Handles upload operations to the 0x0.st server
 class FileUploader with ChangeNotifier {
   int uploadPercentage = 0;
-  bool uploadAborted = false;
+  bool isUploadAborted = false;
 
   /// Uploads file / files(as Zip) to the server.
   ///
@@ -32,11 +32,12 @@ class FileUploader with ChangeNotifier {
   Future<String> uploadFiles(List<PlatformFile> platformFiles) async {
     /// Reset values when function invoke.
     uploadPercentage = 0;
-    uploadAborted = false;
-    PlatformFile platformFile;
-    bool compressFile = platformFiles.length > 1;
+    isUploadAborted = false;
 
-    if (compressFile) {
+    PlatformFile platformFile;
+    bool isCompressOperation = platformFiles.length > 1;
+
+    if (isCompressOperation) {
       platformFile = await _fileCompressor.compressFiles(platformFiles);
     } else {
       platformFile = platformFiles.first;
@@ -52,7 +53,8 @@ class FileUploader with ChangeNotifier {
     _historyBox.add(
       HistoryEntry(
         /// Url substring gets the name of the zip file https://0x0.st/XXXXX.
-        name: compressFile ? url.substring(15).trim() : platformFile.name,
+        name:
+            isCompressOperation ? url.substring(15).trim() : platformFile.name,
         size: platformFile.size,
         url: url,
         uploadDate: DateTime.now(),
@@ -68,7 +70,7 @@ class FileUploader with ChangeNotifier {
   /// Notifies listeners to reflect abort operation on UI.
   void abortUpload() {
     _fileCompressor.abortCompression();
-    uploadAborted = true;
+    isUploadAborted = true;
     notifyListeners();
   }
 
@@ -104,7 +106,7 @@ class FileUploader with ChangeNotifier {
     Stream<List<int>> uploadStream = msStream.transform(
       StreamTransformer.fromHandlers(
         handleData: (data, sink) {
-          if (uploadAborted) {
+          if (isUploadAborted) {
             request.abort();
             return;
           }

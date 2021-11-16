@@ -6,12 +6,12 @@ import 'package:mime/mime.dart';
 ///
 /// Contains files, and has methods to add and remove them.
 class FileManager with ChangeNotifier {
-  List<PlatformFile> filesData = [];
+  List<PlatformFile> files = [];
 
   final _filePicker = FilePicker.platform;
   bool isLoadingFiles = false;
 
-  /// Loads files from device into [filesData] and notify when loading.
+  /// Loads files from device into [files] and notify when loading.
   Future<void> selectFiles() async {
     final result = await _filePicker.pickFiles(
       allowMultiple: true,
@@ -25,48 +25,40 @@ class FileManager with ChangeNotifier {
 
     isLoadingFiles = false;
     if (result != null) {
-      filesData.addAll(result.files);
+      files.addAll(result.files);
     }
     notifyListeners();
   }
 
-  /// Removes all selected files from [filesData] and from cache.
+  /// Removes all selected files from [files] and from cache.
   void removeFiles() {
-    filesData = [];
+    files = [];
     if (!isLoadingFiles) {
       _filePicker.clearTemporaryFiles();
     }
     notifyListeners();
   }
 
-  /// Removes selected file, returns its index from the [filesData] list.
-  int removeFile(PlatformFile fileData) {
-    final index = filesData.indexOf(fileData);
-    filesData.remove(fileData);
+  /// Removes selected file, returns its index from the [files] list.
+  int removeFile(PlatformFile file) {
+    final index = files.indexOf(file);
+    files.remove(file);
     notifyListeners();
-    if (filesData.isEmpty && !isLoadingFiles) {
+    if (files.isEmpty && !isLoadingFiles) {
       _filePicker.clearTemporaryFiles();
     }
     return index;
   }
 
-  /// Inserts file into [filesData] and notifies listeners.
-  void addFile(int index, PlatformFile fileData) {
-    filesData.insert(index, fileData);
+  /// Inserts file into [files] and notifies listeners.
+  void addFile(int index, PlatformFile file) {
+    files.insert(index, file);
     notifyListeners();
   }
+}
 
-  /// The total size of selected files in bytes.
-  int get totalSize {
-    var size = 0;
-    for (var fileData in filesData) {
-      size += fileData.size;
-    }
-    return size;
-  }
-
-  /// Checks if the file is a valid image for Flutter's [Image].
-  bool isImage(PlatformFile fileData) {
+extension FileTypeChecker on PlatformFile {
+  bool get isImage {
     final imageMimeTypes = [
       'image/png',
       'image/jpeg',
@@ -77,7 +69,25 @@ class FileManager with ChangeNotifier {
       'image/vnd.wap.wbmp',
       'image/webp',
     ];
-    final mimeType = lookupMimeType(fileData.path!);
+    final mimeType = lookupMimeType(path!);
     return imageMimeTypes.contains(mimeType);
+  }
+}
+
+extension FilesSizeInfo on List<PlatformFile> {
+  /// The max file size for 0x0.st
+  static const _maxFilesSize = 536870912;
+
+  /// The total size of files in bytes.
+  int get totalSize {
+    var size = 0;
+    for (var file in this) {
+      size += file.size;
+    }
+    return size;
+  }
+
+  bool get isExcedingMaxSize {
+    return totalSize > _maxFilesSize;
   }
 }

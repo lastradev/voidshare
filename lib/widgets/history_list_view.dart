@@ -43,7 +43,10 @@ class HistoryListView extends StatelessWidget {
                     );
                   },
                   leading: Image.asset('assets/images/folder.png', width: 50),
-                  title: Text(entry.name),
+                  title: Text(
+                    entry.name,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   subtitle: Text(
                     '${Formatters.formatBytes(entry.size, 1)} - ${DateFormat('dd/MMM/yyyy').format(entry.uploadDate)}',
                   ),
