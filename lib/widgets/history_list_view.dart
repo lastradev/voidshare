@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../helpers/formatters.dart';
 
 import '../models/history_entry.dart';
@@ -13,15 +14,19 @@ class HistoryListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final historyBox = Hive.box<HistoryEntry>('history');
+    final historyLength = historyBox.length;
 
     return Column(
       children: [
         const SizedBox(height: 10),
         Expanded(
           child: ListView.builder(
-            itemCount: historyBox.length,
+            itemCount: historyLength,
             itemBuilder: (context, index) {
-              final entry = historyBox.getAt(index) as HistoryEntry;
+              /// Newest file on top.
+              final reversedOrderIndex = historyLength - index - 1;
+              final entry =
+                  historyBox.getAt(reversedOrderIndex) as HistoryEntry;
 
               return Card(
                 elevation: 3,
@@ -37,9 +42,14 @@ class HistoryListView extends StatelessWidget {
                 ),
                 child: ListTile(
                   onLongPress: () {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     CustomSnackBars.showCustomSnackBar(
                       context,
                       'File expires in ${entry.retention} days.',
+                      action: SnackBarAction(
+                        label: 'MORE INFO',
+                        onPressed: () => launch('https://0x0.st/'),
+                      ),
                     );
                   },
                   leading: Image.asset('assets/images/folder.png', width: 50),
@@ -57,6 +67,7 @@ class HistoryListView extends StatelessWidget {
                     right: 10,
                   ),
                   trailing: IconButton(
+                    tooltip: 'Share',
                     onPressed: () => Share.share(entry.url),
                     icon: const Icon(Icons.share_rounded),
                     color: Theme.of(context).primaryColor,

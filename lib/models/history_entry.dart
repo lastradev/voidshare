@@ -32,15 +32,31 @@ class HistoryEntry {
   int get retention {
     final daysSinceUpload = DateTime.now().difference(uploadDate).inDays;
 
-    const minimumFileRetention = 30;
-    const maximumFileRetention = 365;
+    const minFileRetention = 30;
+    const maxFileRetention = 365;
     const maxFileSize = 536870912;
 
     /// As described in https://0x0.st.
-    final daysToExpire =
-        (minimumFileRetention + (minimumFileRetention - maximumFileRetention) * pow(size / maxFileSize - 1, 3)).floor();
+    final daysToExpire = (minFileRetention +
+            (minFileRetention - maxFileRetention) *
+                pow(size / maxFileSize - 1, 3))
+        .floor();
 
     final result = daysToExpire - daysSinceUpload;
     return result;
+  }
+}
+
+extension HistoryCleaner on Box<HistoryEntry> {
+  /// Deletes expired uploads from database.
+  ///
+  /// If the [HistoryEntry.retention] of an entry is less/equal than 0
+  /// it will get removed from the box.
+  void deleteExpiredEntries() {
+    for (var entry in keys) {
+      if (get(entry)!.retention <= 0) {
+        delete(entry);
+      }
+    }
   }
 }

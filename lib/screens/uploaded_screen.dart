@@ -14,6 +14,7 @@ class UploadedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fileManager = Provider.of<FileManager>(context);
+
     /// Url can't be obtained from constructor because screen is a named route.
     final url = ModalRoute.of(context)!.settings.arguments as String;
 
@@ -73,9 +74,9 @@ class UploadedScreen extends StatelessWidget {
                       color: Colors.blue,
                       onPressed: () =>
                           Clipboard.setData(ClipboardData(text: url)).then((_) {
-                        CustomSnackBars.showClipboardSnackBar(
+                        CustomSnackBars.showCustomSnackBar(
                           context,
-                          'URL copied to clipboard',
+                          'Link copied to your clipboard.',
                         );
                       }),
                     ),

@@ -46,6 +46,7 @@ class HomeScreen extends StatelessWidget {
             isUploading = true;
 
             /// Keep retrying until success or abort.
+            // Note: Should probably move this business logic from this file.
             while (true) {
               try {
                 Navigator.of(context).pushNamed(
@@ -57,7 +58,6 @@ class HomeScreen extends StatelessWidget {
                   arguments: url.trim(),
                 );
                 break;
-
                 /// Catch abort operation.
               } on HttpException {
                 Navigator.of(context).pop();

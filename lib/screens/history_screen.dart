@@ -12,6 +12,8 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final historyBox = Hive.box<HistoryEntry>('history');
+    historyBox.deleteExpiredEntries();
+
     return Scaffold(
       appBar: AppBar(title: const Text('History')),
       body: historyBox.length > 0
