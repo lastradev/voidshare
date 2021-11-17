@@ -8,6 +8,7 @@ import 'app_theme.dart';
 import 'models/history_entry.dart';
 import 'providers/file_manager.dart';
 import 'providers/file_uploader.dart';
+import 'screens/about_screen.dart';
 import 'screens/error_screen.dart';
 import 'screens/history_screen.dart';
 import 'screens/home_screen.dart';
@@ -54,6 +55,7 @@ class _MyAppState extends State<MyApp> {
         theme: appTheme,
         title: 'VoidShare',
         home: const HomeScreen(),
+
         /// Necessary for page transition,
         /// https://pub.dev/packages/page_transition.
         onGenerateRoute: (settings) {
@@ -79,6 +81,12 @@ class _MyAppState extends State<MyApp> {
             case ErrorScreen.routeName:
               return PageTransition(
                 child: const ErrorScreen(),
+                type: PageTransitionType.fade,
+                settings: settings,
+              );
+            case AboutScreen.routeName:
+              return PageTransition(
+                child: const AboutScreen(),
                 type: PageTransitionType.fade,
                 settings: settings,
               );

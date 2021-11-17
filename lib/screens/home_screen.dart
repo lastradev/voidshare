@@ -8,6 +8,7 @@ import '../widgets/file_loading_indicator.dart';
 import '../widgets/select_files_container.dart';
 import '../widgets/selected_file_card.dart';
 import '../widgets/terms_subtitle.dart';
+import 'about_screen.dart';
 import 'history_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -30,12 +31,18 @@ class HomeScreen extends StatelessWidget {
         title: const Text('VoidShare'),
         actions: [
           IconButton(
-            tooltip: 'History',
             onPressed: () =>
-                Navigator.of(context).pushNamed(HistoryScreen.routeName),
-            icon: const Icon(
-              Icons.history,
-            ),
+                Navigator.of(context).pushNamed(AboutScreen.routeName),
+            tooltip: 'About',
+            icon: const Icon(Icons.info_outline_rounded),
+          ),
+          IconButton(
+              onPressed: () =>
+              Navigator.of(context).pushNamed(HistoryScreen.routeName),
+              tooltip: 'History',
+              icon: const Icon(
+                  Icons.history,
+              ),
           ),
         ],
       ),
