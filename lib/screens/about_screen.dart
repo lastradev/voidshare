@@ -37,11 +37,11 @@ class _AboutScreenState extends State<AboutScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(
-            height: 20,
-          ),
           Column(
             children: [
+              const SizedBox(
+                  height: 20,
+              ),
               Image.asset(
                 'assets/images/appIcon.png',
                 height: MediaQuery.of(context).size.height / 7,

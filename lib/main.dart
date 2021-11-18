@@ -16,6 +16,8 @@ import 'screens/uploaded_screen.dart';
 import 'screens/uploading_screen.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   /// Sets navigation bar to white.
   ///
   /// Checkout styles.xml in android/app/src/main/res folder
@@ -27,11 +29,14 @@ void main() async {
     ),
   );
 
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
   /// Hive database initialization and adapt class for its usage.
   /// https://docs.hivedb.dev/#/custom-objects/type_adapters.
   await Hive.initFlutter();
   Hive.registerAdapter(HistoryEntryAdapter());
   await Hive.openBox<HistoryEntry>('history');
+
   runApp(const MyApp());
 }
 
