@@ -5,10 +5,14 @@
         <!-- Show a splash screen on the activity. Automatically removed when
              Flutter draws its first frame -->
         <item name="android:windowBackground">@drawable/launch_background</item>
-        <!-- Makes status bar white -->
+        <!-- Makes status bar white. -->
         <!-- https://stackoverflow.com/questions/63070943/flutter-android-is-it-possible-to-change-status-bar-color-on-splash-launch -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/white</item>
+        <!-- Colors in colors.xml. -->
+        <item name="android:statusBarColor">@color/background_color_light</item>
+        <!-- Navigation bar white on splash screen. -->
+        <item name="android:navigationBarColor">@color/background_color_light</item>
+        <item name="android:windowFullscreen">false</item>
     </style>
     <!-- Theme applied to the Android Window as soon as the process has started.
          This theme determines the color of the Android Window while your
@@ -19,5 +23,4 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
-
 </resources>

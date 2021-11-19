@@ -58,36 +58,33 @@ class _AboutScreenState extends State<AboutScreen> {
               Text('v$appVersion'),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-            child: Column(
-              children: [
-                const Text(
-                  'This is an open-source project and can be found on',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-                TextButton(
-                  onPressed: () =>
-                      launch('https://github.com/lastra-dev/void-share'),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 4,
-                    child: Image(
-                      image: Theme.of(context).brightness == Brightness.dark
-                          ? const AssetImage(
-                              'assets/images/github-logo-white.png',
-                            )
-                          : const AssetImage('assets/images/github-logo.png'),
-                    ),
+          Column(
+            children: [
+              const Text(
+                'This is an open-source project\n and can be found on',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+              TextButton(
+                onPressed: () =>
+                    launch('https://github.com/lastra-dev/void-share'),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width / 4,
+                  child: Image(
+                    image: Theme.of(context).brightness == Brightness.dark
+                        ? const AssetImage(
+                            'assets/images/github-logo-white.png',
+                          )
+                        : const AssetImage('assets/images/github-logo.png'),
                   ),
                 ),
-                const Text(
-                  'If you liked my work\nshow some ♥ and ⭐ the repo',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
+              ),
+              const Text(
+                'If you liked my work,\nshow some ♥ and ⭐ the repo.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+            ],
           ),
           Column(
             children: [
@@ -102,35 +99,57 @@ class _AboutScreenState extends State<AboutScreen> {
                 ),
               ),
               const Text(
-                'Sponsor this project',
+                'Sponsor this project.',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12),
               ),
             ],
           ),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: 'Folder icon by ',
-                  style: Theme.of(context).textTheme.bodyText2,
+          Column(
+            children: [
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Folder icon by ',
+                      style: Theme.of(context).textTheme.bodyText2,
+                    ),
+                    TextSpan(
+                      text: 'icons8.',
+                      style: const TextStyle(
+                        color: Colors.lightBlue,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => launch('https://icons8.com/'),
+                    ),
+                  ],
                 ),
-                TextSpan(
-                  text: 'icons8',
-                  style: const TextStyle(
-                    color: Colors.lightBlue,
-                  ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () => launch('https://icons8.com/'),
+              ),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Backend by ',
+                      style: Theme.of(context).textTheme.bodyText2,
+                    ),
+                    TextSpan(
+                      text: '0x0.st.',
+                      style: const TextStyle(
+                        color: Colors.lightBlue,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => launch('https://0x0.st/'),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           const Padding(
             padding: EdgeInsets.fromLTRB(5, 30, 5, 20),
             child: Center(
               child: Text(
-                'Made with ♥ by Oscar Lastra',
+                'Made with ♥ by Oscar Lastra.',
                 style: TextStyle(fontSize: 12),
                 textAlign: TextAlign.center,
               ),

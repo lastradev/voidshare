@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/file_manager.dart';
 import '../providers/file_uploader.dart';
@@ -23,6 +24,10 @@ void beginUpload(BuildContext context) async {
     CustomSnackBars.showCustomSnackBar(
       context,
       'Files total size must be under 512 MB.',
+      action: SnackBarAction(
+        label: 'MORE INFO',
+        onPressed: () => launch('https://0x0.st/'),
+      ),
     );
     return;
   }
