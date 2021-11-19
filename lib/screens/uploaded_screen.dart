@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../providers/file_manager.dart';
 import '../widgets/custom_snack_bars.dart';
 
 /// File uploaded screen.
@@ -13,25 +11,14 @@ class UploadedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fileManager = Provider.of<FileManager>(context);
-
     /// Url can't be obtained from constructor because screen is a named route.
     final url = ModalRoute.of(context)!.settings.arguments as String;
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            fileManager.removeFiles();
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
+      appBar: AppBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          fileManager.removeFiles();
           Navigator.of(context).pop();
         },
         tooltip: 'Go Back',

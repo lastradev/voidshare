@@ -46,6 +46,8 @@ void beginUpload(BuildContext context) async {
         arguments: url.trim(),
       );
 
+      fileManager.removeFiles();
+
       break;
 
       /// Catch abort operation.
