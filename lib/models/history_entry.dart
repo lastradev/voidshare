@@ -7,6 +7,8 @@ part 'history_entry.g.dart';
 // Note: If changing this file, see readme for how to regenerate
 // HistoryEntryAdapter class.
 
+/// Upload History Model for local key-value database.
+///
 /// Model class for Hive's history box, holds information about uploads.
 @HiveType(typeId: 0)
 class HistoryEntry {

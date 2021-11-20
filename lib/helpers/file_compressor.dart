@@ -1,6 +1,3 @@
-/// [FileCompressor] class uses an isolate to compress multiple files without
-/// freezing the UI. It depends on [archive_io] package.
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
