@@ -11,46 +11,62 @@ class SelectFilesContainer extends StatelessWidget {
     final fileManager = Provider.of<FileManager>(context);
     bool isLoadingFiles = fileManager.isLoadingFiles;
 
-    return GestureDetector(
-      onTap: () async => await fileManager.selectFiles(),
-      child: DottedBorder(
-        borderType: BorderType.RRect,
-        radius: const Radius.circular(10),
-        color: isLoadingFiles
-            ? Colors.lightBlue.withOpacity(0.4)
-            : Colors.lightBlue,
-        dashPattern: const [12, 8],
-        child: Container(
-          height: 162,
-          width: 300,
+    return Container(
+      margin: const EdgeInsets.only(top: 30, left: 20, right: 20),
+      child: GestureDetector(
+        onTap: () async => await fileManager.selectFiles(),
+        child: DottedBorder(
+          borderType: BorderType.RRect,
+          radius: const Radius.circular(10),
           color: isLoadingFiles
-              ? const Color(0xFFF2FAFF).withOpacity(0.5)
-              : const Color(0xFFF2FAFF),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              isLoadingFiles
-                  ? Opacity(
-                      opacity: 0.3,
-                      child: _buildFolderImage(),
-                    )
-                  : _buildFolderImage(),
-              Text(
-                'Select files',
-                style: TextStyle(
-                  color: isLoadingFiles
-                      ? Colors.blue.withOpacity(0.5)
-                      : Colors.lightBlue,
+              ? Colors.lightBlue.withOpacity(0.4)
+              : Colors.lightBlue,
+          dashPattern: const [12, 8],
+          child: Container(
+            height: _getContainerHeight(context),
+            width: 300,
+            color: isLoadingFiles
+                ? const Color(0xFFF2FAFF).withOpacity(0.5)
+                : const Color(0xFFF2FAFF),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                isLoadingFiles
+                    ? Opacity(
+                        opacity: 0.3,
+                        child: _buildFolderImage(context),
+                      )
+                    : _buildFolderImage(context),
+                Text(
+                  'Select files',
+                  style: TextStyle(
+                    color: isLoadingFiles
+                        ? Colors.blue.withOpacity(0.5)
+                        : Colors.lightBlue,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+}
 
-  Image _buildFolderImage() {
-    return Image.asset('assets/images/folder.png', height: 70);
+Image _buildFolderImage(BuildContext context) {
+  return Image.asset(
+    'assets/images/folder.png',
+    height: MediaQuery.of(context).size.height > 680 ? 70 : 55,
+  );
+}
+
+double _getContainerHeight(BuildContext context) {
+  if (MediaQuery.of(context).size.height < 600) {
+    return 130;
+  } else if (MediaQuery.of(context).size.height < 680) {
+    return 152;
+  } else {
+    return 162;
   }
 }

@@ -47,6 +47,11 @@ Contributions are welcome. Please read our [contributing guidelines](CONTRIBUTIN
 
 ## Development
 
+### Testing Responsivness
+You can test the app on different screen sizes with [device preview](https://pub.dev/packages/device_preview),  
+already added to dev_dependencies.
+
+### History Entry Adapater
 If the `HistoryEntry` model gets changed, you should run:  
 `$ flutter packages pub run build_runner build`  
 to regenerate `HistoryEntryAdapter` class.

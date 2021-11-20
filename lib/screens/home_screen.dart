@@ -37,12 +37,10 @@ class HomeScreen extends StatelessWidget {
             icon: const Icon(Icons.info_outline_rounded),
           ),
           IconButton(
-              onPressed: () =>
-              Navigator.of(context).pushNamed(HistoryScreen.routeName),
-              tooltip: 'History',
-              icon: const Icon(
-                  Icons.history,
-              ),
+            onPressed: () =>
+                Navigator.of(context).pushNamed(HistoryScreen.routeName),
+            tooltip: 'History',
+            icon: const Icon(Icons.history),
           ),
         ],
       ),
@@ -60,7 +58,7 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   Image.asset(
                     'assets/images/writer.png',
-                    width: 200,
+                    height: _getWriterHeight(context),
                   ),
                   const SizedBox(height: 30),
                   Text(
@@ -68,7 +66,6 @@ class HomeScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline5,
                   ),
                   const TermsSubtitle(),
-                  const SizedBox(height: 30),
                   const SelectFilesContainer(),
                   const FileClearer(),
                   if (fileManager.isLoadingFiles) const FileLoadingIndicator(),
@@ -89,5 +86,15 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+double _getWriterHeight(BuildContext context) {
+  if (MediaQuery.of(context).size.height < 600) {
+    return 180;
+  } else if (MediaQuery.of(context).size.height < 680) {
+    return 224;
+  } else {
+    return 284;
   }
 }
