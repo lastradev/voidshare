@@ -34,8 +34,8 @@ VoidShare is a simple temporary file uploader using [0x0.st](https://0x0.st) mad
 
 ## Building from Source
 
-1. If you don't have Flutter SDK installed, please visit official [Flutter](https://flutter.dev/) site.
-2. Fetch latest source code from master branch.
+1. If you don't have Flutter SDK installed, please visit the official [Flutter](https://flutter.dev/) site.
+2. Fetch the latest source code from the master branch.
 
 ``` bash 
 $ git clone https://github.com/lastra-dev/void-share.git
