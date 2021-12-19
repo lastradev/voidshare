@@ -13,7 +13,7 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
-  String? appVersion;
+  late String appVersion;
 
   @override
   void initState() {
