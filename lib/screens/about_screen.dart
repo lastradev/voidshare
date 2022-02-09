@@ -13,7 +13,7 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
-  late String appVersion;
+  String? appVersion;
 
   @override
   void initState() {
@@ -40,7 +40,7 @@ class _AboutScreenState extends State<AboutScreen> {
           Column(
             children: [
               const SizedBox(
-                  height: 20,
+                height: 20,
               ),
               Image.asset(
                 'assets/images/appIcon.png',
