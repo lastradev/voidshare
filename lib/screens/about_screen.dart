@@ -129,7 +129,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Backend by ',
+                      text: 'Backend forked from ',
                       style: Theme.of(context).textTheme.bodyText2,
                     ),
                     TextSpan(

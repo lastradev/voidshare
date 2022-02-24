@@ -48,7 +48,7 @@ class HistoryListView extends StatelessWidget {
                       'File expires in ${entry.retention} days.',
                       action: SnackBarAction(
                         label: 'MORE INFO',
-                        onPressed: () => launch('https://0x0.st/'),
+                        onPressed: () => launch('https://voidshare.xyz/'),
                       ),
                     );
                   },

@@ -17,12 +17,12 @@ class TermsSubtitle extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyText2,
           ),
           TextSpan(
-            text: '0x0.st terms',
+            text: 'VoidShare terms',
             style: const TextStyle(
               color: Colors.lightBlue,
             ),
             recognizer: TapGestureRecognizer()
-              ..onTap = () => launch('https://0x0.st/'),
+              ..onTap = () => launch('http://voidshare.xyz/'),
           ),
         ],
       ),

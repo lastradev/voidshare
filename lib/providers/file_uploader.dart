@@ -14,11 +14,11 @@ typedef _OnUploadProgressCallback = void Function(
   int sentBytes,
   int totalBytes,
 );
-const String _serverUrl = '0x0.st';
+const String _serverUrl = 'voidshare.xyz';
 final _fileCompressor = FileCompressor();
 final _historyBox = Hive.box<HistoryEntry>('history');
 
-/// Handles upload operations to the 0x0.st server
+/// Handles upload operations to the server
 class FileUploader with ChangeNotifier {
   int uploadPercentage = 0;
   bool isUploadAborted = false;
@@ -53,9 +53,11 @@ class FileUploader with ChangeNotifier {
     /// Store upload details in Hive database.
     _historyBox.add(
       HistoryEntry(
-        /// Url substring gets the name of the zip file https://0x0.st/XXXXX.
-        name:
-            _isCompressOperation ? url.substring(15).trim() : platformFile.name,
+        /// Url substring gets the name of the zip file
+        /// https://voidshare.xyz/file.zip would throw file.zip
+        name: _isCompressOperation
+            ? url.substring(url.lastIndexOf('/') + 1).trim()
+            : platformFile.name,
         size: platformFile.size,
         url: url,
         uploadDate: DateTime.now(),
@@ -89,7 +91,7 @@ class FileUploader with ChangeNotifier {
     required _OnUploadProgressCallback onUploadProgress,
   }) async {
     final httpClient = HttpClient();
-    final uri = Uri.https(_serverUrl, '/');
+    final uri = Uri.http(_serverUrl, '/');
     final request = await httpClient.postUrl(uri);
 
     int byteCount = 0;
@@ -132,8 +134,8 @@ class FileUploader with ChangeNotifier {
     final statusCode = httpResponse.statusCode;
 
     if (statusCode ~/ 100 != 2) {
-      throw const HttpException(
-        'Error uploading file, please try again',
+      throw HttpException(
+        await _decodeHttpResponse(httpResponse),
       );
     } else {
       return await _decodeHttpResponse(httpResponse);

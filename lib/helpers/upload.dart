@@ -26,7 +26,7 @@ void beginUpload(BuildContext context) async {
       'Files total size must be under 512 MB.',
       action: SnackBarAction(
         label: 'MORE INFO',
-        onPressed: () => launch('https://0x0.st/'),
+        onPressed: () => launch('https://voidshare.xyz/'),
       ),
     );
     return;

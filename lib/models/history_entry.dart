@@ -30,7 +30,7 @@ class HistoryEntry {
 
   /// The number of days for the file to expire on the server.
   ///
-  /// Measures obtained from https://0x0.st.
+  /// More info: http://voidshare.xyz
   int get retention {
     final daysSinceUpload = DateTime.now().difference(uploadDate).inDays;
 
@@ -38,7 +38,6 @@ class HistoryEntry {
     const maxFileRetention = 365;
     const maxFileSize = 536870912;
 
-    /// As described in https://0x0.st.
     final daysToExpire = (minFileRetention +
             (minFileRetention - maxFileRetention) *
                 pow(size / maxFileSize - 1, 3))
