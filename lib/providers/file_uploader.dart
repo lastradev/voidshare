@@ -91,7 +91,7 @@ class FileUploader with ChangeNotifier {
     required _OnUploadProgressCallback onUploadProgress,
   }) async {
     final httpClient = HttpClient();
-    final uri = Uri.http(_serverUrl, '/');
+    final uri = Uri.https(_serverUrl, '/');
     final request = await httpClient.postUrl(uri);
 
     int byteCount = 0;

@@ -22,7 +22,7 @@ class TermsSubtitle extends StatelessWidget {
               color: Colors.lightBlue,
             ),
             recognizer: TapGestureRecognizer()
-              ..onTap = () => launch('http://voidshare.xyz/terms'),
+              ..onTap = () => launch('https://voidshare.xyz/terms'),
           ),
         ],
       ),

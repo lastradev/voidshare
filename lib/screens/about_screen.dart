@@ -144,7 +144,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 ),
               ),
               TextButton(
-                onPressed: () => launch('http://voidshare.xyz/'),
+                onPressed: () => launch('https://voidshare.xyz/'),
                 child: const Text('VoidShare Website'),
               )
             ],
