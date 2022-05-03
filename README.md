@@ -1,3 +1,4 @@
+<div align="center">
 <img src="https://i.imgur.com/HRUd6lq.png" alt="app icon" height="120">  
 
 ## **Simple & Libre Temporary File Uploader.**
@@ -8,6 +9,15 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 VoidShare is a simple temporary file uploader using [0x0](https://voidshare.xyz) backend, made with Flutter 💙.
+
+[<img alt='Get it on Google Play'
+      src='https://play.google.com/intl/en/badges/static/images/badges/en_badge_web_generic.png'
+      height="80"/>](https://play.google.com/store/apps/details?id=com.lastradev.voidshare&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1')
+[<img src="https://raw.githubusercontent.com/deckerst/common/main/assets/get-it-on-github.png"
+      alt="Download from GitHub"
+      height="80"/>
+  </a>](https://github.com/lastra-dev/void-share/releases)
+</div>
 
 ## Features
 
@@ -22,24 +32,6 @@ VoidShare is a simple temporary file uploader using [0x0](https://voidshare.xyz)
 ## Screenshots
 
 <img src="https://i.imgur.com/bjqiWWT.png" alt="App overview" height="400">
-
-## Download
-
-<div style="display: flex; align-items: center">
-  <a href='https://play.google.com/store/apps/details?id=com.lastradev.voidshare&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
-    <img
-      alt='Get it on Google Play'
-      src='https://play.google.com/intl/en/badges/static/images/badges/en_badge_web_generic.png'
-      width="190"/>
-  </a>
-
-  <a href="https://github.com/lastra-dev/void-share/releases">
-    <img
-      src="https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white"
-      alt="Download from GitHub"
-      width="157"/>
-  </a>
-</div>
 
 ## Building from Source
 
